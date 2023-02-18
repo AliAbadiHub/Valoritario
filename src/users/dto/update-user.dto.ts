@@ -1,19 +1,14 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsDateString, IsEmail, MinLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, MinLength } from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsEmail()
+  @ApiProperty()
   email: string;
 
   @MinLength(4)
+  @ApiProperty()
   password: string;
-
-  @IsDateString()
-  updatedAt: Date;
-
-  constructor() {
-    super();
-    this.updatedAt = new Date();
-  }
 }

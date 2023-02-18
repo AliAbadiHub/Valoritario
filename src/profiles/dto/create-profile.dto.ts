@@ -1,22 +1,28 @@
-import { IsNumber, IsString, IsDefined, IsDateString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsDefined, IsNotEmpty } from 'class-validator';
 export class CreateProfileDto {
   @IsString()
+  @ApiProperty()
   firstName: string;
 
   @IsString()
+  @ApiProperty()
   lastName: string;
 
-  @IsNumber()
-  age: number;
-
-  @IsDateString()
-  createdAt: Date;
+  @IsString()
+  @ApiProperty()
+  phoneNumber: string;
 
   @IsDefined()
   @IsString()
+  @ApiProperty()
   address: string;
 
-  constructor() {
-    this.createdAt = new Date();
-  }
+  @IsString()
+  @ApiProperty()
+  dateOfBirth: string;
+
+  @IsNotEmpty()
+  @ApiProperty()
+  age: number;
 }

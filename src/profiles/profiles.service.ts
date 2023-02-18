@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { CreateProfileDto } from './dto/create-profile.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Repository } from 'typeorm';
+import { CreateProfileDto } from './dto/create-Profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { Profile } from './entities/profile.entity';
 
 @Injectable()
 export class ProfilesService {
-  create(createProfileDto: CreateProfileDto) {
-    return 'This action adds a new profile';
+  constructor(
+    @InjectRepository(Profile) private profileRepository: Repository<Profile>,
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
+  async createProfile(id: number, createProfileDto: CreateProfileDto) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user)
+      throw new HttpException(
+        'User not found, cannot create profile',
+        HttpStatus.BAD_REQUEST,
+      );
+    const newProfile = this.profileRepository.create({
+      ...createProfileDto,
+      createdAt: new Date(),
+    });
+    const savedProfile = await this.profileRepository.save(newProfile);
+    user.profile = savedProfile;
+    return this.userRepository.save(user);
   }
 
   findAll() {
-    return `This action returns all profiles`;
+    return this.profileRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} profile`;
+  async findOne(id: number): Promise<Profile> {
+    return this.profileRepository.findOneBy({ id });
   }
 
-  update(id: number, updateProfileDto: UpdateProfileDto) {
-    return `This action updates a #${id} profile`;
+  updateProfile(id: number, updateProfileDetails: UpdateProfileDto) {
+    return this.profileRepository.update(
+      { id },
+      { ...updateProfileDetails, updatedAt: new Date() },
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} profile`;
+  deleteProfile(id: number) {
+    return this.profileRepository.delete({ id });
   }
 }

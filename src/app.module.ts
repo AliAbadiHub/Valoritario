@@ -7,6 +7,8 @@ import { ProductsModule } from './products/products.module';
 import { PricesModule } from './prices/prices.module';
 import { SupermarketsModule } from './supermarkets/supermarkets.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './users/entities/user.entity';
+import { Profile } from './profiles/entities/profile.entity';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'postgres',
       password: 'password',
       database: 'val_generated',
-      entities: ['dist/**/*.entity.js'],
+      entities: [User, Profile],
       synchronize: true,
     }),
   ],

@@ -1,34 +1,55 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
+@ApiTags('profiles')
 @Controller('profiles')
 export class ProfilesController {
-  constructor(private readonly profilesService: ProfilesService) {}
+  constructor(private profilesService: ProfilesService) {}
 
-  @Post()
-  create(@Body() createProfileDto: CreateProfileDto) {
-    return this.profilesService.create(createProfileDto);
+  @Post(':id')
+  @UsePipes(ValidationPipe)
+  createProfile(
+    @Body() createProfileDto: CreateProfileDto,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.profilesService.createProfile(id, createProfileDto);
   }
-
   @Get()
-  findAll() {
+  getAllProfiles() {
     return this.profilesService.findAll();
   }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.profilesService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return this.profilesService.update(+id, updateProfileDto);
+  @UsePipes(ValidationPipe)
+  async updateProfile(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ) {
+    await this.profilesService.updateProfile(id, updateProfileDto);
+    return updateProfileDto;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.profilesService.remove(+id);
+  @UsePipes(ValidationPipe)
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    await this.profilesService.deleteProfile(id);
   }
 }
