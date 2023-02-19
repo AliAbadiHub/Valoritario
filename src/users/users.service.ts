@@ -1,5 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { profile } from 'console';
+import { Profile } from 'src/profiles/entities/profile.entity';
+import { encodePassword } from 'src/utils/bcrypt';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,11 +12,15 @@ import { User } from './entities/user.entity';
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Profile) private profileRepository: Repository<Profile>,
   ) {}
 
   createUser(createUserDto: CreateUserDto) {
+    const password = encodePassword(createUserDto.password);
+    console.log(password);
     const newUser = this.userRepository.create({
       ...createUserDto,
+      password,
       createdAt: new Date(),
     });
     return this.userRepository.save(newUser);
@@ -34,7 +41,13 @@ export class UsersService {
     );
   }
 
-  deleteUser(id: number) {
-    return this.userRepository.delete({ id });
+  async deleteUser(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    const profile = user.profile;
+    await this.profileRepository.delete(profile.id);
+    await this.userRepository.delete({ id });
   }
 }

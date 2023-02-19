@@ -14,7 +14,7 @@ export class ProfilesService {
   ) {}
 
   async createProfile(id: number, createProfileDto: CreateProfileDto) {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOneBy({ id });
     if (!user)
       throw new HttpException(
         'User not found, cannot create profile',

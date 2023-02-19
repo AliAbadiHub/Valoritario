@@ -1,5 +1,12 @@
 import { Price } from 'src/prices/entities/price.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Supermarket } from 'src/supermarkets/entities/supermarket.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -26,4 +33,7 @@ export class Product {
 
   @OneToMany(() => Price, (price) => price.product)
   price: Price[];
+
+  @ManyToOne(() => Supermarket, (supermarket) => supermarket.products)
+  supermarket: Supermarket;
 }

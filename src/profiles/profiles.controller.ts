@@ -23,11 +23,12 @@ export class ProfilesController {
   @Post(':id')
   @UsePipes(ValidationPipe)
   createProfile(
-    @Body() createProfileDto: CreateProfileDto,
     @Param('id', ParseIntPipe) id: number,
+    @Body() createProfileDto: CreateProfileDto,
   ) {
     return this.profilesService.createProfile(id, createProfileDto);
   }
+
   @Get()
   getAllProfiles() {
     return this.profilesService.findAll();

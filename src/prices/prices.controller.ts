@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
 import { CreatePriceDto } from './dto/create-price.dto';
 import { UpdatePriceDto } from './dto/update-price.dto';
-import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { PriceService } from './prices.service';
 
 @ApiTags('prices')
@@ -19,6 +21,7 @@ export class PriceController {
   constructor(private readonly priceService: PriceService) {}
 
   @Post(':productId')
+  @UsePipes(ValidationPipe)
   async createPrice(
     @Body() createPriceDto: CreatePriceDto,
     @Param('productId', ParseIntPipe) productId: number,
@@ -37,6 +40,7 @@ export class PriceController {
   }
 
   @Patch(':id')
+  @UsePipes(ValidationPipe)
   async updatePrice(
     @Param('id') id: number,
 

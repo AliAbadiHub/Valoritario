@@ -10,6 +10,8 @@ import { User } from './users/entities/user.entity';
 import { Profile } from './profiles/entities/profile.entity';
 import { Product } from './products/entities/product.entity';
 import { Price } from './prices/entities/price.entity';
+import { SupermarketsModule } from './supermarkets/supermarkets.module';
+import { Supermarket } from './supermarkets/entities/supermarket.entity';
 
 @Module({
   imports: [
@@ -24,9 +26,10 @@ import { Price } from './prices/entities/price.entity';
       username: 'postgres',
       password: 'password',
       database: 'val_generated',
-      entities: [User, Profile, Product, Price],
+      entities: [User, Profile, Product, Price, Supermarket],
       synchronize: true,
     }),
+    SupermarketsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

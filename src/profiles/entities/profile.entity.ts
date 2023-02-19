@@ -1,7 +1,8 @@
 import { Min } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'users_profiles' })
+@Entity({ name: 'users profiles' })
 export class Profile {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
@@ -30,4 +31,7 @@ export class Profile {
 
   @Column({ nullable: true })
   updatedAt: Date;
+
+  @OneToOne(() => User, (user) => user.profile)
+  user: User;
 }
