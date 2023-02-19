@@ -12,6 +12,7 @@ export class ProfilesService {
     @InjectRepository(Profile) private profileRepository: Repository<Profile>,
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
+
   async createProfile(id: number, createProfileDto: CreateProfileDto) {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user)

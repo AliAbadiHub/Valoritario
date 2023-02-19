@@ -5,10 +5,11 @@ import { UsersModule } from './users/users.module';
 import { ProfilesModule } from './profiles/profiles.module';
 import { ProductsModule } from './products/products.module';
 import { PricesModule } from './prices/prices.module';
-import { SupermarketsModule } from './supermarkets/supermarkets.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { Profile } from './profiles/entities/profile.entity';
+import { Product } from './products/entities/product.entity';
+import { Price } from './prices/entities/price.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,6 @@ import { Profile } from './profiles/entities/profile.entity';
     ProfilesModule,
     ProductsModule,
     PricesModule,
-    SupermarketsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -24,7 +24,7 @@ import { Profile } from './profiles/entities/profile.entity';
       username: 'postgres',
       password: 'password',
       database: 'val_generated',
-      entities: [User, Profile],
+      entities: [User, Profile, Product, Price],
       synchronize: true,
     }),
   ],

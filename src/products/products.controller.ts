@@ -6,39 +6,52 @@ import {
   Patch,
   Param,
   Delete,
+  UsePipes,
+  ValidationPipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Product } from './entities/product.entity';
 
 @ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  @ApiCreatedResponse({ type: Product })
+  @Post('create')
+  @UsePipes(ValidationPipe)
+  createProduct(@Body() createProductDto: CreateProductDto) {
+    return this.productsService.createProduct(createProductDto);
   }
 
+  @ApiOkResponse({ type: Product })
   @Get()
-  findAll() {
+  getAllProducts() {
     return this.productsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  @Get(':productId')
+  findOne(@Param('productId') productId: string) {
+    return this.productsService.findOne(+productId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
+  @Patch(':productId')
+  @UsePipes(ValidationPipe)
+  async update(
+    @Param('productId', ParseIntPipe) productId: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    await this.productsService.updateProduct(productId, updateProductDto);
+    return updateProductDto;
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  @Delete(':productId')
+  @UsePipes(ValidationPipe)
+  async delete(@Param('productId', ParseIntPipe) productId: number) {
+    await this.productsService.deleteProduct(productId);
   }
 }

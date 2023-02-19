@@ -6,39 +6,52 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
-import { PricesService } from './prices.service';
 import { CreatePriceDto } from './dto/create-price.dto';
 import { UpdatePriceDto } from './dto/update-price.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { PriceService } from './prices.service';
 
 @ApiTags('prices')
 @Controller('prices')
-export class PricesController {
-  constructor(private readonly pricesService: PricesService) {}
+export class PriceController {
+  constructor(private readonly priceService: PriceService) {}
 
-  @Post()
-  create(@Body() createPriceDto: CreatePriceDto) {
-    return this.pricesService.create(createPriceDto);
+  @Post(':productId')
+  async createPrice(
+    @Body() createPriceDto: CreatePriceDto,
+    @Param('productId', ParseIntPipe) productId: number,
+  ) {
+    return this.priceService.createPrice(productId, createPriceDto);
   }
 
   @Get()
   findAll() {
-    return this.pricesService.findAll();
+    return this.priceService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pricesService.findOne(+id);
+  async getPricesByProductId(@Param('priceId') productId: number) {
+    const prices = await this.priceService.getPricesByProductId(productId);
+    return prices;
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePriceDto: UpdatePriceDto) {
-    return this.pricesService.update(+id, updatePriceDto);
+  async updatePrice(
+    @Param('id') id: number,
+
+    @Body() updatePriceDto: UpdatePriceDto,
+  ) {
+    const updatedPrice = await this.priceService.updatePrice(
+      id,
+      updatePriceDto,
+    );
+    return updatedPrice;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pricesService.remove(+id);
+  async deletePrice(@Param('id') id: number) {
+    const deletedPrice = await this.priceService.deletePrice(id);
+    return deletedPrice;
   }
 }
