@@ -3,6 +3,7 @@ import { ProductSupermarket } from 'src/product_supermarket/entities/product_sup
 import {
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -26,6 +27,17 @@ export class Supermarket {
   updatedAt: Date;
 
   @ManyToMany(() => Product, { cascade: true })
+  @JoinTable({
+    name: 'product_supermarket',
+    joinColumn: {
+      name: 'supermarketId',
+      referencedColumnName: 'supermarketId',
+    },
+    inverseJoinColumn: {
+      name: 'productId',
+      referencedColumnName: 'productId',
+    },
+  })
   products: Product[];
 
   @OneToMany(
