@@ -36,14 +36,6 @@ export class Product {
   updatedAt: Date;
 
   @ManyToMany(() => Supermarket, { cascade: true })
-  @JoinTable({
-    name: 'product_supermarket',
-    joinColumn: { name: 'productId', referencedColumnName: 'productId' },
-    inverseJoinColumn: {
-      name: 'supermarketId',
-      referencedColumnName: 'supermarketId',
-    },
-  })
   supermarkets: Supermarket[];
 
   @OneToMany(
