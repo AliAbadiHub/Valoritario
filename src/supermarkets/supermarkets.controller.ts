@@ -27,21 +27,24 @@ export class SupermarketsController {
     return this.supermarketsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.supermarketsService.findOne(+id);
+  @Get(':supermarketId')
+  findOne(@Param('supermarketId') supermarketId: string) {
+    return this.supermarketsService.findOne(+supermarketId);
   }
 
-  @Patch(':id')
+  @Patch(':supermarketId')
   update(
-    @Param('id') id: string,
+    @Param('supermarketId') supermarketId: string,
     @Body() updateSupermarketDto: UpdateSupermarketDto,
   ) {
-    return this.supermarketsService.update(+id, updateSupermarketDto);
+    return this.supermarketsService.update(
+      +supermarketId,
+      updateSupermarketDto,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.supermarketsService.remove(+id);
+  @Delete(':supermarketId')
+  remove(@Param('supermarketId') supermarketId: string) {
+    return this.supermarketsService.deleteSupermarket(+supermarketId);
   }
 }

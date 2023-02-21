@@ -1,7 +1,6 @@
-import { Min } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'users_profiles' })
+@Entity({ name: 'users profiles' })
 export class Profile {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
@@ -12,7 +11,7 @@ export class Profile {
   @Column({ nullable: false })
   lastName: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   phoneNumber: string;
 
   @Column({ nullable: false })
@@ -22,10 +21,9 @@ export class Profile {
   dateOfBirth: string;
 
   @Column({ nullable: false })
-  @Min(16)
   age: number;
 
-  @Column()
+  @Column({ nullable: false })
   createdAt: Date;
 
   @Column({ nullable: true })

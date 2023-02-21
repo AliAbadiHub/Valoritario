@@ -1,26 +1,43 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateSupermarketDto } from './dto/create-supermarket.dto';
 import { UpdateSupermarketDto } from './dto/update-supermarket.dto';
+import { Supermarket } from './entities/supermarket.entity';
 
 @Injectable()
 export class SupermarketsService {
+  constructor(
+    @InjectRepository(Supermarket)
+    private supermarketRepository: Repository<Supermarket>,
+  ) {}
   create(createSupermarketDto: CreateSupermarketDto) {
-    return 'This action adds a new supermarket';
+    const newSupermarket = this.supermarketRepository.create({
+      ...createSupermarketDto,
+      createdAt: new Date(),
+    });
+    return this.supermarketRepository.save(newSupermarket);
   }
 
   findAll() {
-    return `This action returns all supermarkets`;
+    return this.supermarketRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} supermarket`;
+  findOne(supermarketId: number) {
+    return this.supermarketRepository.findOneBy({ supermarketId });
   }
 
-  update(id: number, updateSupermarketDto: UpdateSupermarketDto) {
-    return `This action updates a #${id} supermarket`;
+  update(
+    supermarketId: number,
+    updateSupermarketDetails: UpdateSupermarketDto,
+  ) {
+    return this.supermarketRepository.update(
+      { supermarketId },
+      { ...updateSupermarketDetails, updatedAt: new Date() },
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} supermarket`;
+  deleteSupermarket(supermarketId: number) {
+    return this.supermarketRepository.delete({ supermarketId });
   }
 }

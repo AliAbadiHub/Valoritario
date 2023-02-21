@@ -27,18 +27,21 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  @Get(':productId')
+  findOne(@Param('productId') productId: number) {
+    return this.productsService.findOne(+productId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
+  @Patch(':productId')
+  update(
+    @Param('productId') productId: string,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    return this.productsService.updateProduct(+productId, updateProductDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  @Delete(':productId')
+  remove(@Param('productId') productId: string) {
+    return this.productsService.deleteProduct(+productId);
   }
 }

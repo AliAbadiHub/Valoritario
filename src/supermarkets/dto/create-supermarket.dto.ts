@@ -1,1 +1,12 @@
-export class CreateSupermarketDto {}
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
+
+export class CreateSupermarketDto {
+  @IsString()
+  @ApiProperty()
+  supermarketName: string;
+
+  @IsString()
+  @ApiProperty()
+  supermarketLocation: string;
+}
