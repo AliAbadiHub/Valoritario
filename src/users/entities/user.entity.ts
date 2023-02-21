@@ -21,6 +21,6 @@ export class User {
   @Column({ nullable: true })
   updatedAt: Date;
 
-  @OneToOne(() => Profile)
+  @OneToOne(() => Profile, (profile) => profile.user)
   profile: Profile;
 }

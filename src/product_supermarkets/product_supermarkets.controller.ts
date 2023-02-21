@@ -1,0 +1,61 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+  ParseIntPipe,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { CreateProductSupermarketDto } from './dto/create-product_supermarket.dto';
+import { UpdateProductSupermarketDto } from './dto/update-product_supermarket.dto';
+import { ProductSupermarketsService } from './product_supermarkets.service';
+
+@ApiTags('product-supermarket')
+@Controller('product-supermarket')
+export class ProductSupermarketController {
+  constructor(private productSupermarketService: ProductSupermarketsService) {}
+
+  @Post(':id')
+  @UsePipes(ValidationPipe)
+  createProductSupermarket(
+    @Body() createProductSupermarketDto: CreateProductSupermarketDto,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.productSupermarketService.createProductSupermarket(
+      id,
+      createProductSupermarketDto,
+    );
+  }
+  @Get()
+  getAllProductSupermarket() {
+    return this.productSupermarketService.findAll();
+  }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.productSupermarketService.findOne(+id);
+  }
+
+  @Patch(':id')
+  @UsePipes(ValidationPipe)
+  async updateProductSupermarket(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProductSupermarketDto: UpdateProductSupermarketDto,
+  ) {
+    await this.productSupermarketService.updateProductSupermarket(
+      id,
+      updateProductSupermarketDto,
+    );
+    return updateProductSupermarketDto;
+  }
+
+  @Delete(':id')
+  @UsePipes(ValidationPipe)
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    await this.productSupermarketService.deleteProductSupermarket(id);
+  }
+}

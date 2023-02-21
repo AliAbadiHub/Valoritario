@@ -1,13 +1,5 @@
-import { Product } from 'src/products/entities/product.entity';
-import { ProductSupermarket } from 'src/product_supermarket/entities/product_supermarket.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { ProductSupermarket } from 'src/product_supermarkets/entities/product_supermarket.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'supermarkets' })
 export class Supermarket {
@@ -26,23 +18,9 @@ export class Supermarket {
   @Column({ nullable: true })
   updatedAt: Date;
 
-  @ManyToMany(() => Product, { cascade: true })
-  @JoinTable({
-    name: 'product_supermarket',
-    joinColumn: {
-      name: 'supermarketId',
-      referencedColumnName: 'supermarketId',
-    },
-    inverseJoinColumn: {
-      name: 'productId',
-      referencedColumnName: 'productId',
-    },
-  })
-  products: Product[];
-
   @OneToMany(
     () => ProductSupermarket,
     (productSupermarket) => productSupermarket.supermarket,
   )
-  productSupermarkets: ProductSupermarket[];
+  productSupermarket: ProductSupermarket[];
 }
