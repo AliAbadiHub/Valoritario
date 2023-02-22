@@ -31,6 +31,7 @@ export class ProductSupermarketsService {
     newProductSupermarket.price = price;
     newProductSupermarket.product = product;
     newProductSupermarket.supermarket = supermarket;
+    newProductSupermarket.createdAt = new Date();
 
     return this.productSupermarketRepository.save(newProductSupermarket);
   }
