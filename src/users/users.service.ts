@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { encodePassword } from 'src/utils/bcrypt.utils';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,8 +12,11 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   createUser(createUserDto: CreateUserDto) {
+    const password = encodePassword(createUserDto.password);
+    console.log(password);
     const newUser = this.userRepository.create({
       ...createUserDto,
+      password,
       createdAt: new Date(),
     });
     return this.userRepository.save(newUser);
@@ -26,14 +30,24 @@ export class UsersService {
     return this.userRepository.findOneBy({ id });
   }
 
-  updateUser(id: number, updateUserDetails: UpdateUserDto) {
-    return this.userRepository.update(
+  async updateUser(id: number, updateUserDetails: UpdateUserDto) {
+    if (updateUserDetails.password) {
+      updateUserDetails.password = await encodePassword(
+        updateUserDetails.password,
+      );
+    }
+    await this.userRepository.update(
       { id },
       { ...updateUserDetails, updatedAt: new Date() },
     );
+    return await this.userRepository.findOneBy({ id });
   }
 
   deleteUser(id: number) {
     return this.userRepository.delete({ id });
+  }
+
+  findUserByUsername(username: string) {
+    return this.userRepository.findOneBy({ username });
   }
 }

@@ -12,6 +12,7 @@ import { Product } from './products/entities/product.entity';
 import { Supermarket } from './supermarkets/entities/supermarket.entity';
 import { ProductSupermarketsModule } from './product_supermarkets/product_supermarkets.module';
 import { ProductSupermarket } from './product_supermarkets/entities/product_supermarket.entity';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     UsersModule,
@@ -29,6 +30,7 @@ import { ProductSupermarket } from './product_supermarkets/entities/product_supe
       entities: [User, Profile, Product, Supermarket, ProductSupermarket],
       synchronize: true,
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
