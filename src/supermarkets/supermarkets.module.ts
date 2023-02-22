@@ -8,5 +8,6 @@ import { Supermarket } from './entities/supermarket.entity';
   imports: [TypeOrmModule.forFeature([Supermarket])],
   controllers: [SupermarketsController],
   providers: [SupermarketsService],
+  exports: [TypeOrmModule.forFeature([Supermarket])],
 })
 export class SupermarketsModule {}

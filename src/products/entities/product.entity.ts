@@ -31,5 +31,5 @@ export class Product {
     () => ProductSupermarket,
     (productSupermarket) => productSupermarket.product,
   )
-  productSupermarket: ProductSupermarket[];
+  productSupermarket: ProductSupermarket;
 }

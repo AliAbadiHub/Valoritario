@@ -7,7 +7,7 @@ export class ProductSupermarket {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'float' })
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
   @Column({ nullable: false })
@@ -17,8 +17,8 @@ export class ProductSupermarket {
   updatedAt: Date;
 
   @ManyToOne(() => Product, (product) => product.productSupermarket)
-  product: Product[];
+  product: Product;
 
   @ManyToOne(() => Supermarket, (supermarket) => supermarket.productSupermarket)
-  supermarket: Supermarket[];
+  supermarket: Supermarket;
 }

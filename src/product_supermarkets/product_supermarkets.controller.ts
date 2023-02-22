@@ -20,16 +20,18 @@ import { ProductSupermarketsService } from './product_supermarkets.service';
 export class ProductSupermarketController {
   constructor(private productSupermarketService: ProductSupermarketsService) {}
 
-  @Post(':id')
+  @Post('/supermarket/:supermarketId/product/:productId')
   @UsePipes(ValidationPipe)
   createProductSupermarket(
+    @Param('supermarketId') supermarketId: number,
+    @Param('productId') productId: number,
     @Body() createProductSupermarketDto: CreateProductSupermarketDto,
-    @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.productSupermarketService.createProductSupermarket(
-      id,
-      createProductSupermarketDto,
-    );
+    return this.productSupermarketService.createProductSupermarket({
+      ...createProductSupermarketDto,
+      supermarketId,
+      productId,
+    });
   }
   @Get()
   getAllProductSupermarket() {
@@ -42,7 +44,7 @@ export class ProductSupermarketController {
 
   @Patch(':id')
   @UsePipes(ValidationPipe)
-  async updateProductSupermarket(
+  async updateProductSupermarketDto(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProductSupermarketDto: UpdateProductSupermarketDto,
   ) {

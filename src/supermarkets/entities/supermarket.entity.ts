@@ -22,5 +22,5 @@ export class Supermarket {
     () => ProductSupermarket,
     (productSupermarket) => productSupermarket.supermarket,
   )
-  productSupermarket: ProductSupermarket[];
+  productSupermarket: ProductSupermarket;
 }

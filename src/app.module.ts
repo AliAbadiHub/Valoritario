@@ -18,6 +18,7 @@ import { ProductSupermarket } from './product_supermarkets/entities/product_supe
     ProfilesModule,
     ProductsModule,
     SupermarketsModule,
+    ProductSupermarketsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -28,7 +29,6 @@ import { ProductSupermarket } from './product_supermarkets/entities/product_supe
       entities: [User, Profile, Product, Supermarket, ProductSupermarket],
       synchronize: true,
     }),
-    ProductSupermarketsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
