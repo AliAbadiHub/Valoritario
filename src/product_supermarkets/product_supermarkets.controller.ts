@@ -9,13 +9,16 @@ import {
   UsePipes,
   ValidationPipe,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateProductSupermarketDto } from './dto/create-product_supermarket.dto';
 import { UpdateProductSupermarketDto } from './dto/update-product_supermarket.dto';
 import { ProductSupermarketsService } from './product_supermarkets.service';
 
 @ApiTags('product-supermarket')
+@UseGuards(JwtAuthGuard)
 @Controller('product-supermarket')
 export class ProductSupermarketController {
   constructor(private productSupermarketService: ProductSupermarketsService) {}

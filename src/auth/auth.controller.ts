@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  CacheInterceptor,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -6,6 +14,7 @@ import { LocalAuthGuard } from './local-auth.guard';
 
 @Controller('auth')
 @ApiTags('Authentication')
+@UseInterceptors(CacheInterceptor)
 export class AuthController {
   constructor(private authService: AuthService) {}
   @ApiBody({

@@ -6,13 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { SupermarketsService } from './supermarkets.service';
 import { CreateSupermarketDto } from './dto/create-supermarket.dto';
 import { UpdateSupermarketDto } from './dto/update-supermarket.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('supermarkets')
+@UseGuards(JwtAuthGuard)
 @Controller('supermarkets')
 export class SupermarketsController {
   constructor(private readonly supermarketsService: SupermarketsService) {}
