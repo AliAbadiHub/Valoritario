@@ -1,5 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { ApiTags } from '@nestjs/swagger';
+import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { comparePasswords } from 'src/utils/bcrypt.utils';
 
@@ -7,11 +9,14 @@ import { comparePasswords } from 'src/utils/bcrypt.utils';
 @ApiTags('Authentication')
 export class AuthService {
   constructor(
-    @Inject('USER_SERVICE') private readonly userService: UsersService,
+    private userService: UsersService,
+    private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, password: string) {
-    console.log('inside validateUser');
+  async validateUser(
+    username: string,
+    password: string,
+  ): Promise<User | undefined> {
     const userDB = await this.userService.findUserByUsername(username);
     if (userDB) {
       const matched = comparePasswords(password, userDB.password);
@@ -26,5 +31,14 @@ export class AuthService {
 
     console.log('User validation failed!');
     return null;
+  }
+
+  generateToken(user: any) {
+    return {
+      access_token: this.jwtService.sign({
+        name: user.name,
+        sub: user.id,
+      }),
+    };
   }
 }
