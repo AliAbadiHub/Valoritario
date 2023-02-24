@@ -13,11 +13,12 @@ import { Supermarket } from './supermarkets/entities/supermarket.entity';
 import { ProductSupermarketsModule } from './product_supermarkets/product_supermarkets.module';
 import { ProductSupermarket } from './product_supermarkets/entities/product_supermarket.entity';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import * as dotenv from 'dotenv';
+dotenv.config();
 @Module({
   imports: [
-    CacheModule.register({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot(),
     UsersModule,
     ProfilesModule,
     ProductsModule,

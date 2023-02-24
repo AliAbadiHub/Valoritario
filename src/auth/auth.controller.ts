@@ -1,40 +1,61 @@
 import {
-  CacheInterceptor,
+  Body,
   Controller,
-  Get,
+  Delete,
+  HttpException,
+  HttpStatus,
+  Ip,
   Post,
-  Request,
-  UseGuards,
-  UseInterceptors,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
-import { LocalAuthGuard } from './local-auth.guard';
+import { LoginDto } from './dto/login.dto';
+import RefreshTokenDto from './dto/refresh-token.dto';
 
 @Controller('auth')
 @ApiTags('Authentication')
-@UseInterceptors(CacheInterceptor)
 export class AuthController {
-  constructor(private authService: AuthService) {}
-  @ApiBody({
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('login')
+  @ApiBody({ type: LoginDto })
+  @ApiOkResponse({
+    description: 'User authenticated successfully',
     schema: {
-      type: 'object',
       properties: {
-        username: { type: 'string' },
-        password: { type: 'string' },
+        access_token: { type: 'string' },
+        refresh_token: { type: 'string' },
       },
     },
   })
-  @UseGuards(LocalAuthGuard)
-  @Post('login')
-  async login(@Request() req): Promise<any> {
-    return this.authService.generateToken(req.user);
+  async login(@Req() request, @Ip() ip: string, @Body() body: LoginDto) {
+    try {
+      const { accessToken, refreshToken } = await this.authService.login(
+        body.username,
+        body.password,
+        {
+          ipAddress: ip,
+          userAgent: request.headers['user-agent'],
+        },
+      );
+      return { accessToken, refresh_token: refreshToken };
+    } catch (err) {
+      if (err instanceof UnauthorizedException) {
+        throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+      }
+      throw err;
+    }
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('user')
-  async user(@Request() req): Promise<any> {
-    return req.user;
+  @Post('refresh')
+  async refreshToken(@Body() body: RefreshTokenDto) {
+    return this.authService.refresh(body.refreshToken);
+  }
+
+  @Delete('logout')
+  async logout(@Body() body: RefreshTokenDto) {
+    return this.authService.logout(body.refreshToken);
   }
 }

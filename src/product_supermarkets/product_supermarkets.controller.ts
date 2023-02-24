@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateProductSupermarketDto } from './dto/create-product_supermarket.dto';
 import { UpdateProductSupermarketDto } from './dto/update-product_supermarket.dto';
 import { ProductSupermarketsService } from './product_supermarkets.service';

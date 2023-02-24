@@ -26,7 +26,7 @@ export class UsersService {
     return this.userRepository.find({ relations: ['profile'] });
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOne(id: number): Promise<User | undefined> {
     return this.userRepository.findOneBy({ id });
   }
 
@@ -47,7 +47,7 @@ export class UsersService {
     return this.userRepository.delete({ id });
   }
 
-  findUserByUsername(username: string) {
+  findUserByUsername(username: string): Promise<User | undefined> {
     return this.userRepository.findOneBy({ username });
   }
 }

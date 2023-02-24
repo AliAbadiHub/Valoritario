@@ -10,12 +10,13 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -56,5 +57,12 @@ export class UsersController {
   @UsePipes(ValidationPipe)
   async delete(@Param('id', ParseIntPipe) id: number) {
     await this.usersService.deleteUser(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/me')
+  me(@Req() request) {
+    const userId = request.user.userId;
+    return this.usersService.findOne(userId);
   }
 }

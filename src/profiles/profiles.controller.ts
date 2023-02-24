@@ -15,7 +15,7 @@ import { ProfilesService } from './profiles.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('profiles')
 @UseGuards(JwtAuthGuard)
