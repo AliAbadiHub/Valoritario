@@ -27,7 +27,8 @@ export class UsersService {
   }
 
   async findOne(id: number): Promise<User | undefined> {
-    return this.userRepository.findOneBy({ id });
+    const user = await this.userRepository.findOne({ where: { id } });
+    return user || undefined;
   }
 
   async updateUser(id: number, updateUserDetails: UpdateUserDto) {
@@ -47,7 +48,8 @@ export class UsersService {
     return this.userRepository.delete({ id });
   }
 
-  findUserByUsername(username: string): Promise<User | undefined> {
-    return this.userRepository.findOneBy({ username });
+  async findUserByUsername(username: string): Promise<User | undefined> {
+    const user = await this.userRepository.findOne({ where: { username } });
+    return user || undefined;
   }
 }

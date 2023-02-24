@@ -99,6 +99,7 @@ export class AuthService {
       console.log('User successfully logged out');
       return;
     }
+    // delete refreshtoken from DB
     this.refreshTokens = this.refreshTokens.filter(
       (refreshToken) => refreshToken.id !== refreshToken.id,
     );

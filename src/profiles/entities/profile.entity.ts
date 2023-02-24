@@ -9,7 +9,7 @@ import {
 
 @Entity({ name: 'users profiles' })
 export class Profile {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ nullable: false })
