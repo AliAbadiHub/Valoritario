@@ -1,17 +1,18 @@
 import { sign } from 'jsonwebtoken';
 
-class RefreshToken {
-  constructor(init?: Partial<RefreshToken>) {
-    Object.assign(this, init);
-  }
-  id: number;
+export class RefreshToken {
+  id: string;
   userId: number;
-  userAgent: string;
   ipAddress: string;
+  userAgent: string;
+
+  constructor(partial: Partial<RefreshToken>) {
+    Object.assign(this, partial);
+  }
 
   sign(): string {
-    return sign({ ...this }, process.env.REFRESH_SECRET);
+    return sign({ id: this.id }, process.env.REFRESH_SECRET, {
+      expiresIn: '7d',
+    });
   }
 }
-
-export default RefreshToken;

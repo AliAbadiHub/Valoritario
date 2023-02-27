@@ -7,20 +7,29 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import * as redisStore from 'cache-manager-redis-store';
+import { JwtModule } from '@nestjs/jwt/dist';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
     TypeOrmModule.forFeature([User]),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
     CacheModule.register({
+      isGlobal: true,
       store: redisStore,
       host: process.env.REDIS_HOST,
       port: parseInt(process.env.REDIS_PORT),
-      password: 'password',
+      password: process.env.REDIS_PASSWORD,
     }),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
+  exports: [JwtModule],
 })
 export class AuthModule {}

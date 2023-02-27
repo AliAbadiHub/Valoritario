@@ -18,11 +18,11 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('profiles')
-@UseGuards(JwtAuthGuard)
 @Controller('profiles')
 export class ProfilesController {
   constructor(private profilesService: ProfilesService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id')
   @UsePipes(ValidationPipe)
   createProfile(
@@ -31,15 +31,18 @@ export class ProfilesController {
   ) {
     return this.profilesService.createProfile(id, createProfileDto);
   }
+  @UseGuards(JwtAuthGuard)
   @Get()
   getAllProfiles() {
     return this.profilesService.findAll();
   }
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.profilesService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UsePipes(ValidationPipe)
   async updateProfile(
@@ -50,6 +53,7 @@ export class ProfilesController {
     return updateProfileDto;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @UsePipes(ValidationPipe)
   async delete(@Param('id', ParseIntPipe) id: number) {

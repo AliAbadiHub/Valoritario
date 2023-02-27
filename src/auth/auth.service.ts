@@ -1,50 +1,17 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
-import RefreshToken from './entities/refresh-token.entity';
-import { sign, verify } from 'jsonwebtoken';
-import { comparePasswords } from 'src/utils/bcrypt.utils';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { compare } from 'bcrypt';
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
+import { RefreshToken } from './entities/refresh-token.entity';
 
 @Injectable()
-@ApiTags('Authentication')
 export class AuthService {
-  private refreshTokens: RefreshToken[] = []; //this must be later updated to store the refreshtokens in redis
-  constructor(private readonly usersService: UsersService) {}
-
-  async refresh(refreshStr: string): Promise<string | undefined> {
-    const refreshToken = await this.retrieveRefreshToken(refreshStr);
-    if (!refreshToken) {
-      return undefined;
-    }
-
-    const user = await this.usersService.findOne(refreshToken.userId);
-    if (!user) {
-      return undefined;
-    }
-
-    const accessToken = {
-      userId: refreshToken.userId,
-    };
-
-    return sign(accessToken, process.env.ACCESS_SECRET, { expiresIn: '1h' });
-  }
-
-  private retrieveRefreshToken(
-    refresh: string,
-  ): Promise<RefreshToken | undefined> {
-    try {
-      const decoded = verify(refresh, process.env.REFRESH_SECRET);
-      if (typeof decoded === 'string') {
-        return undefined;
-      }
-      return Promise.resolve(
-        this.refreshTokens.find((token) => token.id === decoded.id),
-      );
-    } catch (e) {
-      return undefined;
-    }
-  }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager,
+  ) {}
 
   async login(
     username: string,
@@ -55,14 +22,36 @@ export class AuthService {
     if (!user) {
       return undefined;
     }
-    if (!comparePasswords(password, user.password)) {
-      throw new UnauthorizedException();
+    if (!(await compare(password, user.password))) {
+      return undefined;
     }
     const { accessToken, refreshToken } = await this.newRefreshAndAccessToken(
       user,
       values,
     );
+    await this.cacheManager.set(
+      `val_generated:${refreshToken}`,
+      user.id,
+      3600, // set the TTL of the cache to 1 hour (3600 seconds)
+    );
     return { accessToken, refreshToken };
+  }
+
+  async refresh(refreshToken: string): Promise<string | undefined> {
+    const userId = await this.cacheManager.get(`val_generated:${refreshToken}`);
+    if (!userId) {
+      return undefined;
+    }
+    const user = await this.usersService.findOne(userId);
+    if (!user) {
+      return undefined;
+    }
+    const accessToken = this.jwtService.sign({ userId: user.id });
+    return accessToken;
+  }
+
+  async logout(refreshToken: string): Promise<void> {
+    await this.cacheManager.del(`val_generated:${refreshToken}`);
   }
 
   private async newRefreshAndAccessToken(
@@ -70,38 +59,14 @@ export class AuthService {
     values: { userAgent: string; ipAddress: string },
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const refreshObject = new RefreshToken({
-      id:
-        this.refreshTokens.length === 0
-          ? 0
-          : this.refreshTokens[this.refreshTokens.length - 1].id + 1,
+      id: Math.random().toString(36).substring(2, 15),
       ...values,
       userId: user.id,
     });
-    this.refreshTokens.push(refreshObject);
+    const refreshToken = refreshObject.sign();
     return {
-      refreshToken: refreshObject.sign(),
-      accessToken: sign(
-        {
-          userId: user.id,
-        },
-        process.env.ACCESS_SECRET,
-        {
-          expiresIn: '1h',
-        },
-      ),
+      refreshToken,
+      accessToken: this.jwtService.sign({ userId: user.id }),
     };
-  }
-
-  async logout(refreshStr): Promise<void> {
-    const refreshToken = await this.retrieveRefreshToken(refreshStr);
-
-    if (!refreshToken) {
-      console.log('User successfully logged out');
-      return;
-    }
-    // delete refreshtoken from DB
-    this.refreshTokens = this.refreshTokens.filter(
-      (refreshToken) => refreshToken.id !== refreshToken.id,
-    );
   }
 }
