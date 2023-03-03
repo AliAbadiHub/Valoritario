@@ -6,7 +6,6 @@ export class CreateSupermarketDto {
   @ApiProperty()
   supermarketName: string;
 
-  @IsString()
   @ApiProperty()
-  supermarketLocation: string;
+  supermarketComment: string;
 }

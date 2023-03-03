@@ -18,8 +18,11 @@ export class ProductsService {
     return this.productRepository.save(newProduct);
   }
 
-  findAll() {
-    return this.productRepository.find();
+  findAll(limit: number, offset: number) {
+    return this.productRepository.find({
+      skip: offset,
+      take: limit,
+    });
   }
 
   findOne(productId: number) {

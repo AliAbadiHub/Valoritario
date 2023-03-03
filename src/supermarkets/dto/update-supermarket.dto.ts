@@ -8,7 +8,6 @@ export class UpdateSupermarketDto extends PartialType(CreateSupermarketDto) {
   @ApiProperty()
   supermarketName: string;
 
-  @IsString()
   @ApiProperty()
-  supermarketLocation: string;
+  supermarketComment: string;
 }

@@ -1,4 +1,4 @@
-import { CacheModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -14,7 +14,9 @@ import { ProductSupermarketsModule } from './product_supermarkets/product_superm
 import { ProductSupermarket } from './product_supermarkets/entities/product_supermarket.entity';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { ShoppingListsModule } from './shopping-lists/shopping-lists.module';
 import * as dotenv from 'dotenv';
+import { ShoppingList } from './shopping-lists/entities/shopping-list.entity';
 dotenv.config();
 @Module({
   imports: [
@@ -29,12 +31,20 @@ dotenv.config();
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'password',
+      password: '123455',
       database: 'val_generated',
-      entities: [User, Profile, Product, Supermarket, ProductSupermarket],
+      entities: [
+        User,
+        Profile,
+        Product,
+        Supermarket,
+        ProductSupermarket,
+        ShoppingList,
+      ],
       synchronize: true,
     }),
     AuthModule,
+    ShoppingListsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

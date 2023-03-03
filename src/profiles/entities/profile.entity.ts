@@ -12,6 +12,9 @@ export class Profile {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  userId: number;
+
   @Column({ nullable: false })
   firstName: string;
 

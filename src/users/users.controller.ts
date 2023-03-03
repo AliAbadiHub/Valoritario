@@ -10,6 +10,7 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -30,10 +31,9 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  getAllUsers() {
-    return this.usersService.findAll();
+  getAllUsers(@Query('limit') limit: number, @Query('offset') offset: number) {
+    return this.usersService.findAll(limit, offset);
   }
-
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {

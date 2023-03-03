@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductSupermarketDto } from './dto/create-product_supermarket.dto';
@@ -22,10 +22,18 @@ export class ProductSupermarketsService {
     createProductSupermarketDto: CreateProductSupermarketDto,
   ): Promise<ProductSupermarket> {
     const { price, productId, supermarketId } = createProductSupermarketDto;
-    const product = await this.productRepository.findOneByOrFail({ productId });
-    const supermarket = await this.supermarketRepository.findOneByOrFail({
+    const product = await this.productRepository.findOneBy({ productId });
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${productId} not found`);
+    }
+    const supermarket = await this.supermarketRepository.findOneBy({
       supermarketId,
     });
+    if (!supermarket) {
+      throw new NotFoundException(
+        `Supermarket with ID ${supermarketId} not found`,
+      );
+    }
 
     const newProductSupermarket = new ProductSupermarket();
     newProductSupermarket.price = price;
@@ -40,20 +48,20 @@ export class ProductSupermarketsService {
     return this.productSupermarketRepository.find();
   }
 
-  async findOne(id: number): Promise<ProductSupermarket> {
-    return this.productSupermarketRepository.findOneByOrFail({ id });
+  async findOne(inventoryId: number): Promise<ProductSupermarket> {
+    return this.productSupermarketRepository.findOneByOrFail({ inventoryId });
   }
   updateProductSupermarket(
-    id: number,
+    inventoryId: number,
     updateProductSupermarketDetails: UpdateProductSupermarketDto,
   ) {
     return this.productSupermarketRepository.update(
-      { id },
+      { inventoryId },
       { ...updateProductSupermarketDetails, updatedAt: new Date() },
     );
   }
 
-  deleteProductSupermarket(id: number) {
-    return this.productSupermarketRepository.delete({ id });
+  deleteProductSupermarket(inventoryId: number) {
+    return this.productSupermarketRepository.delete({ inventoryId });
   }
 }

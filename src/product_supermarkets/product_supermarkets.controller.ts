@@ -15,52 +15,55 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateProductSupermarketDto } from './dto/create-product_supermarket.dto';
 import { UpdateProductSupermarketDto } from './dto/update-product_supermarket.dto';
+import { ProductSupermarket } from './entities/product_supermarket.entity';
 import { ProductSupermarketsService } from './product_supermarkets.service';
 
 @ApiTags('product-supermarket')
 @UseGuards(JwtAuthGuard)
-@Controller('product-supermarket')
+@Controller('inventory')
 export class ProductSupermarketController {
   constructor(private productSupermarketService: ProductSupermarketsService) {}
 
-  @Post('/supermarket/:supermarketId/product/:productId')
+  @Post(':supermarketId/:productId')
   @UsePipes(ValidationPipe)
-  createProductSupermarket(
+  async createProductSupermarket(
     @Param('supermarketId') supermarketId: number,
     @Param('productId') productId: number,
     @Body() createProductSupermarketDto: CreateProductSupermarketDto,
-  ) {
+  ): Promise<ProductSupermarket> {
     return this.productSupermarketService.createProductSupermarket({
       ...createProductSupermarketDto,
       supermarketId,
       productId,
     });
   }
+
   @Get()
   getAllProductSupermarket() {
     return this.productSupermarketService.findAll();
   }
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productSupermarketService.findOne(+id);
+  
+  @Get(':inventoryId')
+  findOne(@Param('inventoryId', ParseIntPipe) inventoryId: number) {
+    return this.productSupermarketService.findOne(+inventoryId);
   }
 
-  @Patch(':id')
+  @Patch(':inventoryId')
   @UsePipes(ValidationPipe)
   async updateProductSupermarketDto(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('inventoryId', ParseIntPipe) inventoryId: number,
     @Body() updateProductSupermarketDto: UpdateProductSupermarketDto,
   ) {
     await this.productSupermarketService.updateProductSupermarket(
-      id,
+      inventoryId,
       updateProductSupermarketDto,
     );
     return updateProductSupermarketDto;
   }
 
-  @Delete(':id')
+  @Delete(':inventoryId')
   @UsePipes(ValidationPipe)
-  async delete(@Param('id', ParseIntPipe) id: number) {
-    await this.productSupermarketService.deleteProductSupermarket(id);
+  async delete(@Param('inventoryId', ParseIntPipe) inventoryId: number) {
+    await this.productSupermarketService.deleteProductSupermarket(inventoryId);
   }
 }

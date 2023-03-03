@@ -13,6 +13,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Query } from '@nestjs/common/decorators';
 
 @ApiTags('products')
 @UseGuards(JwtAuthGuard)
@@ -20,14 +21,19 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+  getAllProducts(
+    @Query('limit') limit: number,
+    @Query('offset') offset: number,
+  ) {
+    return this.productsService.findAll(limit, offset);
   }
 
   @Get(':productId')

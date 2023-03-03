@@ -1,14 +1,11 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber } from 'class-validator';
-import { CreateProductSupermarketDto } from './create-product_supermarket.dto';
 
-export class UpdateProductSupermarketDto extends PartialType(
-  CreateProductSupermarketDto,
-) {
+export class UpdateProductSupermarketDto {
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty()
-  price: number;
+  supermarketId: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -18,5 +15,5 @@ export class UpdateProductSupermarketDto extends PartialType(
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty()
-  supermarketId: number;
+  price: number;
 }

@@ -22,8 +22,12 @@ export class UsersService {
     return this.userRepository.save(newUser);
   }
 
-  findAll() {
-    return this.userRepository.find({ relations: ['profile'] });
+  findAll(limit: number, offset: number) {
+    return this.userRepository.find({
+      relations: ['profile'],
+      skip: offset,
+      take: limit,
+    });
   }
 
   async findOne(id: number): Promise<User | undefined> {

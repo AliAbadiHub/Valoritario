@@ -5,7 +5,7 @@ export class CreateProductSupermarketDto {
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty()
-  price: number;
+  supermarketId: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -15,5 +15,5 @@ export class CreateProductSupermarketDto {
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty()
-  supermarketId: number;
+  price: number;
 }

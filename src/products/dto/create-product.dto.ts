@@ -8,17 +8,8 @@ export class CreateProductDto {
 
   @IsString()
   @ApiProperty()
-  productBrand: string;
-
-  @IsString()
-  @ApiProperty()
-  productSize: string;
-
-  @IsString()
-  @ApiProperty()
   productCategory: string;
 
-  @IsString()
   @ApiProperty()
   productComment: string;
 }

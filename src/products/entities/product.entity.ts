@@ -1,19 +1,21 @@
 import { ProductSupermarket } from 'src/product_supermarkets/entities/product_supermarket.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ShoppingList } from 'src/shopping-lists/entities/shopping-list.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'products' })
 export class Product {
   @PrimaryGeneratedColumn()
   productId: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   productName: string;
-
-  @Column({ nullable: false })
-  productBrand: string;
-
-  @Column({ nullable: false })
-  productSize: string;
 
   @Column({ nullable: false })
   productCategory: string;
@@ -30,6 +32,13 @@ export class Product {
   @OneToMany(
     () => ProductSupermarket,
     (productSupermarket) => productSupermarket.product,
+    {
+      cascade: ['remove'],
+    },
   )
-  productSupermarket: ProductSupermarket;
+  @JoinColumn({ name: 'productId' })
+  productSupermarket: ProductSupermarket[];
+
+  @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.product)
+  shoppingList: ShoppingList[];
 }

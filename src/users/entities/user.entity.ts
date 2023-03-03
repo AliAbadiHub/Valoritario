@@ -1,5 +1,12 @@
 import { Profile } from 'src/profiles/entities/profile.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import { ShoppingList } from 'src/shopping-lists/entities/shopping-list.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  OneToMany,
+} from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
@@ -23,4 +30,9 @@ export class User {
 
   @OneToOne(() => Profile, (profile) => profile.user)
   profile: Profile;
+
+  @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.user, {
+    onDelete: 'CASCADE',
+  })
+  shoppingList: ShoppingList;
 }

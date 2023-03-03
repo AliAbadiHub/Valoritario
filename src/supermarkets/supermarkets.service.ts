@@ -19,8 +19,11 @@ export class SupermarketsService {
     return this.supermarketRepository.save(newSupermarket);
   }
 
-  findAll() {
-    return this.supermarketRepository.find();
+  findAll(limit: number, offset: number) {
+    return this.supermarketRepository.find({
+      skip: offset,
+      take: limit,
+    });
   }
 
   findOne(supermarketId: number) {
