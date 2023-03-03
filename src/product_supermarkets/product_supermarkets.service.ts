@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 import { CreateProductSupermarketDto } from './dto/create-product_supermarket.dto';
 import { UpdateProductSupermarketDto } from './dto/update-product_supermarket.dto';
 import { ProductSupermarket } from './entities/product_supermarket.entity';
@@ -19,9 +19,11 @@ export class ProductSupermarketsService {
   ) {}
 
   async createProductSupermarket(
+    supermarketId: number,
+    productId: number,
     createProductSupermarketDto: CreateProductSupermarketDto,
   ): Promise<ProductSupermarket> {
-    const { price, productId, supermarketId } = createProductSupermarketDto;
+    const { price } = createProductSupermarketDto;
     const product = await this.productRepository.findOneBy({ productId });
     if (!product) {
       throw new NotFoundException(`Product with ID ${productId} not found`);
@@ -34,18 +36,38 @@ export class ProductSupermarketsService {
         `Supermarket with ID ${supermarketId} not found`,
       );
     }
-
+  
     const newProductSupermarket = new ProductSupermarket();
     newProductSupermarket.price = price;
     newProductSupermarket.product = product;
     newProductSupermarket.supermarket = supermarket;
     newProductSupermarket.createdAt = new Date();
-
+  
     return this.productSupermarketRepository.save(newProductSupermarket);
   }
 
   findAll() {
     return this.productSupermarketRepository.find();
+  }
+
+  async findAllBySupermarketId(
+    supermarketId: number,
+  ): Promise<ProductSupermarket[]> {
+    return this.productSupermarketRepository
+      .createQueryBuilder('productSupermarket')
+      .where('productSupermarket.supermarketId = :supermarketId', {
+        supermarketId,
+      })
+      .getMany();
+  }
+
+  async getPricesByProduct(productId: number): Promise<ProductSupermarket[]> {
+    return this.productSupermarketRepository
+      .createQueryBuilder('productSupermarket')
+      .leftJoinAndSelect('productSupermarket.supermarket', 'supermarket')
+      .where('productSupermarket.productId = :productId', { productId })
+      .orderBy('productSupermarket.price', 'ASC')
+      .getMany();
   }
 
   async findOne(inventoryId: number): Promise<ProductSupermarket> {

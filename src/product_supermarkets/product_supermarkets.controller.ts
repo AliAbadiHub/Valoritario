@@ -18,7 +18,7 @@ import { UpdateProductSupermarketDto } from './dto/update-product_supermarket.dt
 import { ProductSupermarket } from './entities/product_supermarket.entity';
 import { ProductSupermarketsService } from './product_supermarkets.service';
 
-@ApiTags('product-supermarket')
+@ApiTags('inventory')
 @UseGuards(JwtAuthGuard)
 @Controller('inventory')
 export class ProductSupermarketController {
@@ -31,21 +31,33 @@ export class ProductSupermarketController {
     @Param('productId') productId: number,
     @Body() createProductSupermarketDto: CreateProductSupermarketDto,
   ): Promise<ProductSupermarket> {
-    return this.productSupermarketService.createProductSupermarket({
-      ...createProductSupermarketDto,
+    return this.productSupermarketService.createProductSupermarket(
       supermarketId,
       productId,
-    });
+      createProductSupermarketDto,
+    );
   }
 
   @Get()
   getAllProductSupermarket() {
     return this.productSupermarketService.findAll();
   }
-  
+
   @Get(':inventoryId')
   findOne(@Param('inventoryId', ParseIntPipe) inventoryId: number) {
     return this.productSupermarketService.findOne(+inventoryId);
+  }
+
+  @Get('supermarket/:supermarketId')
+  async findPricesBySupermarket(
+    @Param('supermarketId') supermarketId: number,
+  ): Promise<ProductSupermarket[]> {
+    return this.productSupermarketService.findAllBySupermarketId(supermarketId);
+  }
+
+  @Get('product/:productId')
+  async getPricesByProduct(@Param('productId') productId: number) {
+    return this.productSupermarketService.getPricesByProduct(productId);
   }
 
   @Patch(':inventoryId')
