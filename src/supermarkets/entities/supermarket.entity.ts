@@ -32,7 +32,7 @@ export class Supermarket {
       cascade: ['remove'],
     },
   )
-  @JoinColumn({ name: 'supermarketId' })
+  @JoinColumn({ name: 'supermarketId', referencedColumnName: 'supermarketId' })
   productSupermarket: ProductSupermarket;
 
   @OneToMany(() => ShoppingList, (ShoppingList) => ShoppingList.supermarket)

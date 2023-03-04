@@ -7,12 +7,20 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 
 @Entity({ name: 'inventory' })
+@Unique(['productId', 'supermarketId'])
 export class ProductSupermarket {
   @PrimaryGeneratedColumn()
   inventoryId: number;
+
+  @Column({ nullable: false })
+  productId: number;
+
+  @Column({ nullable: false })
+  supermarketId: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;

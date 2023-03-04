@@ -4,7 +4,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -36,8 +35,7 @@ export class Product {
       cascade: ['remove'],
     },
   )
-  @JoinColumn({ name: 'productId' })
-  productSupermarket: ProductSupermarket[];
+ @JoinColumn({ name: 'productId', referencedColumnName: 'productId' })  productSupermarket: ProductSupermarket[];
 
   @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.product)
   shoppingList: ShoppingList[];
