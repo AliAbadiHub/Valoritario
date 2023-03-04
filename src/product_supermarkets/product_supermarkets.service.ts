@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Equal, Repository } from 'typeorm';
 import { CreateProductSupermarketDto } from './dto/create-product_supermarket.dto';
@@ -36,13 +36,15 @@ export class ProductSupermarketsService {
         `Supermarket with ID ${supermarketId} not found`,
       );
     }
-  
+
     const newProductSupermarket = new ProductSupermarket();
     newProductSupermarket.price = price;
     newProductSupermarket.product = product;
     newProductSupermarket.supermarket = supermarket;
+    newProductSupermarket.productId = productId;
+    newProductSupermarket.supermarketId = supermarketId;
     newProductSupermarket.createdAt = new Date();
-  
+
     return this.productSupermarketRepository.save(newProductSupermarket);
   }
 
@@ -50,15 +52,31 @@ export class ProductSupermarketsService {
     return this.productSupermarketRepository.find();
   }
 
-  async findAllBySupermarketId(
-    supermarketId: number,
-  ): Promise<ProductSupermarket[]> {
-    return this.productSupermarketRepository
-      .createQueryBuilder('productSupermarket')
-      .where('productSupermarket.supermarketId = :supermarketId', {
-        supermarketId,
-      })
-      .getMany();
+  async findPricesBySupermarket(
+    @Param('supermarketId') supermarketId: number,
+  ): Promise<any> {
+    const supermarket = await this.supermarketRepository.findOneBy({
+      supermarketId,
+    });
+
+    if (!supermarket) {
+      throw new NotFoundException(
+        `Supermarket with ID ${supermarketId} not found`,
+      );
+    }
+
+    const productSupermarkets = await this.productSupermarketRepository.find({
+      where: { supermarket: { supermarketId } },
+      relations: ['product'],
+    });
+
+    const products = productSupermarkets.map((productSupermarket) => ({
+      productId: productSupermarket.product.productId,
+      productName: productSupermarket.product.productName,
+      price: productSupermarket.price,
+    }));
+
+    return { supermarketName: supermarket.supermarketName, products };
   }
 
   async getPricesByProduct(productId: number): Promise<ProductSupermarket[]> {

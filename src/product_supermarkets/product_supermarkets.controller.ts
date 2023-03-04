@@ -52,7 +52,7 @@ export class ProductSupermarketController {
   async findPricesBySupermarket(
     @Param('supermarketId') supermarketId: number,
   ): Promise<ProductSupermarket[]> {
-    return this.productSupermarketService.findAllBySupermarketId(supermarketId);
+    return this.productSupermarketService.findPricesBySupermarket(supermarketId);
   }
 
   @Get('product/:productId')
