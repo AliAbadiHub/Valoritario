@@ -16,18 +16,18 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('supermarkets')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('supermarkets')
 export class SupermarketsController {
   constructor(private readonly supermarketsService: SupermarketsService) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createSupermarketDto: CreateSupermarketDto) {
     return this.supermarketsService.create(createSupermarketDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get()
   getAllSupermarkets(
     @Query('limit') limit: number,
@@ -36,13 +36,13 @@ export class SupermarketsController {
     return this.supermarketsService.findAll(limit, offset);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get(':supermarketId')
   findOne(@Param('supermarketId') supermarketId: string) {
     return this.supermarketsService.findOne(+supermarketId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Patch(':supermarketId')
   update(
     @Param('supermarketId') supermarketId: string,
@@ -54,7 +54,7 @@ export class SupermarketsController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete(':supermarketId')
   remove(@Param('supermarketId') supermarketId: string) {
     return this.supermarketsService.deleteSupermarket(+supermarketId);

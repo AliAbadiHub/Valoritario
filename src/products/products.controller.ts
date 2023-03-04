@@ -16,18 +16,18 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Query } from '@nestjs/common/decorators';
 
 @ApiTags('products')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get()
   getAllProducts(
     @Query('limit') limit: number,

@@ -19,7 +19,7 @@ import { ProductSupermarket } from './entities/product_supermarket.entity';
 import { ProductSupermarketsService } from './product_supermarkets.service';
 
 @ApiTags('inventory')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('inventory')
 export class ProductSupermarketController {
   constructor(private productSupermarketService: ProductSupermarketsService) {}

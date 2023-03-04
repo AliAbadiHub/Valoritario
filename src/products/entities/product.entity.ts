@@ -35,7 +35,8 @@ export class Product {
       cascade: ['remove'],
     },
   )
- @JoinColumn({ name: 'productId', referencedColumnName: 'productId' })  productSupermarket: ProductSupermarket[];
+  @JoinColumn({ name: 'productId', referencedColumnName: 'productId' })
+  productSupermarket: ProductSupermarket[];
 
   @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.product)
   shoppingList: ShoppingList[];
