@@ -38,6 +38,6 @@ export class Product {
   @JoinColumn({ name: 'productId', referencedColumnName: 'productId' })
   productSupermarket: ProductSupermarket[];
 
-  @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.product)
+  @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.products)
   shoppingList: ShoppingList[];
 }

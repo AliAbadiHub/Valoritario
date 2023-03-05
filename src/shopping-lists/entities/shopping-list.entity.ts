@@ -1,26 +1,18 @@
-import { Product } from 'src/products/entities/product.entity';
-import { ProductSupermarket } from 'src/product_supermarkets/entities/product_supermarket.entity';
 import { Supermarket } from 'src/supermarkets/entities/supermarket.entity';
 import { User } from 'src/users/entities/user.entity';
+import { ProductSupermarket } from 'src/product_supermarkets/entities/product_supermarket.entity';
 import {
   Entity,
-  OneToMany,
-  ManyToOne,
   PrimaryGeneratedColumn,
   Column,
-  JoinColumn,
+  ManyToOne,
+  OneToMany,
 } from 'typeorm';
 
-@Entity({ name: 'shopping-lists' })
+@Entity({ name: 'shopping_lists' })
 export class ShoppingList {
   @PrimaryGeneratedColumn()
-  shoppingListId: number;
-
-  @Column({ nullable: false })
-  productName: string;
-
-  @Column({ nullable: false })
-  supermarketName: string;
+  id: number;
 
   @Column({ nullable: false })
   createdAt: Date;
@@ -28,24 +20,18 @@ export class ShoppingList {
   @Column({ nullable: true })
   updatedAt: Date;
 
+  @Column('simple-json', { nullable: false })
+  products: { productId: number; quantity: number }[];
+
   @ManyToOne(() => User, (user) => user.shoppingList)
-  @JoinColumn()
   user: User;
-
-  @OneToMany(() => Supermarket, (supermarket) => supermarket.shoppingList)
-  supermarket: Supermarket;
-
-  @OneToMany(() => Product, (product) => product.shoppingList)
-  @JoinColumn()
-  product: Product;
 
   @OneToMany(
     () => ProductSupermarket,
-    (productSupermarkets) => productSupermarkets.shoppingList,
+    (productSupermarket) => productSupermarket.shoppingList,
   )
-  @JoinColumn()
-  productSupermarkets: ProductSupermarket[];
+  items: ProductSupermarket[];
 
-  @Column('json', { nullable: false })
-  items: any[];
+  @ManyToOne(() => Supermarket, (supermarket) => supermarket.shoppingLists)
+  supermarket: Supermarket;
 }

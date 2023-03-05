@@ -1,22 +1,20 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Repository } from 'typeorm';
-import { CreateShoppingListDto } from './dto/create-shopping-list.dto';
-import { ShoppingList } from './entities/shopping-list.entity';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ShoppingListService } from './shopping-lists.service';
+import { CreateShoppingListDto } from './dto/create-shopping-list.dto';
 
 @Controller('shopping-lists')
-// @UseGuards(JwtAuthGuard)
 export class ShoppingListsController {
-  constructor(
-    private readonly shoppingListService: ShoppingListService,
-    @InjectRepository(ShoppingList)
-    private readonly shoppingListRepository: Repository<ShoppingList>,
-  ) {}
+  constructor(private readonly shoppingListService: ShoppingListService) {}
 
   @Post()
-  async create(@Body() shoppingList: CreateShoppingListDto[]): Promise<any> {
-    return await this.shoppingListService.getShoppingList(shoppingList);
+  async create(@Body() createShoppingListDto: CreateShoppingListDto) {
+    try {
+      const shoppingList = await this.shoppingListService.create(
+        createShoppingListDto,
+      );
+      return { shoppingList };
+    } catch (error) {
+      return { error };
+    }
   }
 }

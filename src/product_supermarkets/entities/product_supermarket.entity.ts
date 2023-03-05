@@ -4,7 +4,6 @@ import { Supermarket } from 'src/supermarkets/entities/supermarket.entity';
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
@@ -37,9 +36,6 @@ export class ProductSupermarket {
   @ManyToOne(() => Supermarket, (supermarket) => supermarket.productSupermarket)
   supermarket: Supermarket;
 
-  @ManyToOne(
-    () => ShoppingList,
-    (shoppingList) => shoppingList.productSupermarkets,
-  )
+  @ManyToOne(() => ShoppingList, (shoppingList) => shoppingList.items)
   shoppingList: ShoppingList;
 }

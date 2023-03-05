@@ -6,6 +6,7 @@ import {
   Column,
   OneToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity({ name: 'users' })
@@ -34,5 +35,6 @@ export class User {
   @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.user, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   shoppingList: ShoppingList;
 }

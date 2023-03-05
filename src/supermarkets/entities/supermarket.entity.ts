@@ -33,8 +33,12 @@ export class Supermarket {
     },
   )
   @JoinColumn({ name: 'supermarketId', referencedColumnName: 'supermarketId' })
-  productSupermarket: ProductSupermarket;
+  productSupermarket: ProductSupermarket[];
 
-  @OneToMany(() => ShoppingList, (ShoppingList) => ShoppingList.supermarket)
-  shoppingList: ShoppingList[];
+  @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.supermarket)
+  @JoinColumn({
+    name: 'supermarketName',
+    referencedColumnName: 'supermarketName',
+  })
+  shoppingLists: ShoppingList[];
 }
