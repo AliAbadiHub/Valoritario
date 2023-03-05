@@ -70,14 +70,19 @@ export class ProductSupermarketsService {
     return { supermarketName: supermarket.supermarketName, products };
   }
 
-  async getPricesByProduct(productId: number): Promise<ProductSupermarket[]> {
+  async getPricesByProduct(productId: number): Promise<any[]> {
     return this.productSupermarketRepository
       .createQueryBuilder('productSupermarket')
       .leftJoinAndSelect('productSupermarket.supermarket', 'supermarket')
       .leftJoinAndSelect('productSupermarket.product', 'product')
       .where('productSupermarket.productId = :productId', { productId })
       .orderBy('productSupermarket.price', 'ASC')
-      .getMany();
+      .select([
+        'productSupermarket.price as price',
+        'product.productName as productName',
+        'supermarket.supermarketName as supermarketName',
+      ])
+      .getRawMany();
   }
 
   async updateProductSupermarket(
