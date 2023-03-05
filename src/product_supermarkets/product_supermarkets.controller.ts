@@ -38,21 +38,13 @@ export class ProductSupermarketController {
     );
   }
 
-  @Get()
-  getAllProductSupermarket() {
-    return this.productSupermarketService.findAll();
-  }
-
-  @Get(':inventoryId')
-  findOne(@Param('inventoryId', ParseIntPipe) inventoryId: number) {
-    return this.productSupermarketService.findOne(+inventoryId);
-  }
-
   @Get('supermarket/:supermarketId')
   async findPricesBySupermarket(
     @Param('supermarketId') supermarketId: number,
   ): Promise<ProductSupermarket[]> {
-    return this.productSupermarketService.findPricesBySupermarket(supermarketId);
+    return this.productSupermarketService.findPricesBySupermarket(
+      supermarketId,
+    );
   }
 
   @Get('product/:productId')
@@ -71,6 +63,16 @@ export class ProductSupermarketController {
       updateProductSupermarketDto,
     );
     return updateProductSupermarketDto;
+  }
+
+  @Get()
+  getAllProductSupermarket() {
+    return this.productSupermarketService.findAll();
+  }
+
+  @Get(':inventoryId')
+  findOne(@Param('inventoryId', ParseIntPipe) inventoryId: number) {
+    return this.productSupermarketService.findOne(+inventoryId);
   }
 
   @Delete(':inventoryId')
