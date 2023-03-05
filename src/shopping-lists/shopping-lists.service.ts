@@ -3,12 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateShoppingListDto } from './dto/create-shopping-list.dto';
 import { ProductSupermarket } from '../product_supermarkets/entities/product_supermarket.entity';
+import { ShoppingList } from './entities/shopping-list.entity';
 
 @Injectable()
 export class ShoppingListService {
   constructor(
     @InjectRepository(ProductSupermarket)
     private readonly productSupermarketRepository: Repository<ProductSupermarket>,
+    @InjectRepository(ShoppingList)
+    private readonly shoppingListRepository: Repository<ShoppingList>,
   ) {}
 
   async create(dto: CreateShoppingListDto) {
@@ -44,5 +47,8 @@ export class ShoppingListService {
       totalPrice,
       shoppingList,
     };
+  }
+  async delete(id: number) {
+    await this.shoppingListRepository.delete(id);
   }
 }

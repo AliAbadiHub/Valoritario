@@ -29,6 +29,9 @@ export class User {
   @Column({ nullable: true })
   updatedAt: Date;
 
+  @Column({ default: 'user' })
+  role: string;
+
   @OneToOne(() => Profile, (profile) => profile.user)
   profile: Profile;
 

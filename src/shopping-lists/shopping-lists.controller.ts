@@ -1,7 +1,14 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ShoppingListService } from './shopping-lists.service';
 import { CreateShoppingListDto } from './dto/create-shopping-list.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+// import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 // @UseGuards(JwtAuthGuard)
 @Controller('shopping-lists')
@@ -18,5 +25,11 @@ export class ShoppingListsController {
     } catch (error) {
       return { error };
     }
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    await this.shoppingListService.delete(id);
+    return { message: 'Shopping list with the ID ${id} has been deleted.' };
   }
 }
