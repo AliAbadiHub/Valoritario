@@ -17,17 +17,22 @@ export class ShoppingListService {
     const shoppingList = [];
 
     for (const item of items) {
-      const productSupermarkets = await this.productSupermarketRepository.find({
-        where: { productId: item.productId },
-        relations: ['product', 'supermarket'],
-      });
+      const lowestPriceProductSupermarkets =
+        await this.productSupermarketRepository
+          .createQueryBuilder('ps')
+          .where('ps.productId = :productId', { productId: item.productId })
+          .orderBy('ps.price', 'ASC')
+          .leftJoinAndSelect('ps.product', 'product')
+          .leftJoinAndSelect('ps.supermarket', 'supermarket')
+          .getMany();
 
       const shoppingListItem = {
-        product: productSupermarkets[0].product.productName,
-        supermarket: productSupermarkets[0].supermarket.supermarketName,
-        pricePerProduct: productSupermarkets[0].price,
+        product: lowestPriceProductSupermarkets[0].product.productName,
+        supermarket:
+          lowestPriceProductSupermarkets[0].supermarket.supermarketName,
+        pricePerProduct: lowestPriceProductSupermarkets[0].price,
         quantity: item.quantity,
-        total: productSupermarkets[0].price * item.quantity,
+        total: lowestPriceProductSupermarkets[0].price * item.quantity,
       };
 
       shoppingList.push(shoppingListItem);
