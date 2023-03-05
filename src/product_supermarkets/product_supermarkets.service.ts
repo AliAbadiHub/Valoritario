@@ -80,24 +80,36 @@ export class ProductSupermarketsService {
       .getMany();
   }
 
+  async updateProductSupermarket(
+    supermarketId: number,
+    productId: number,
+    updateProductSupermarketDto: UpdateProductSupermarketDto,
+  ): Promise<ProductSupermarket> {
+    const { price } = updateProductSupermarketDto;
+    const productSupermarket = await this.productSupermarketRepository.findOne({
+      where: { supermarketId, productId },
+    });
+    if (!productSupermarket) {
+      throw new NotFoundException(
+        `Inventory with supermarketId ${supermarketId} and productId ${productId} not found`,
+      );
+    }
+    productSupermarket.price = price;
+    productSupermarket.updatedAt = new Date();
+    return this.productSupermarketRepository.save(productSupermarket);
+  }
+
+  deleteProductSupermarket(inventoryId: number) {
+    return this.productSupermarketRepository.delete({ inventoryId });
+  }
+
   async findOne(inventoryId: number): Promise<ProductSupermarket> {
     return this.productSupermarketRepository.findOneByOrFail({ inventoryId });
-  }
-  updateProductSupermarket(
-    inventoryId: number,
-    updateProductSupermarketDetails: UpdateProductSupermarketDto,
-  ) {
-    return this.productSupermarketRepository.update(
-      { inventoryId },
-      { ...updateProductSupermarketDetails, updatedAt: new Date() },
-    );
   }
 
   findAll() {
     return this.productSupermarketRepository.find();
   }
 
-  deleteProductSupermarket(inventoryId: number) {
-    return this.productSupermarketRepository.delete({ inventoryId });
-  }
+
 }

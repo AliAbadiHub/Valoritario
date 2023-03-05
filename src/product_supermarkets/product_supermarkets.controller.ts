@@ -52,17 +52,19 @@ export class ProductSupermarketController {
     return this.productSupermarketService.getPricesByProduct(productId);
   }
 
-  @Patch(':inventoryId')
-  @UsePipes(ValidationPipe)
-  async updateProductSupermarketDto(
-    @Param('inventoryId', ParseIntPipe) inventoryId: number,
+  @Patch(':supermarketId/:productId')
+  async updateProductSupermarket(
+    @Param('supermarketId') supermarketId: number,
+    @Param('productId') productId: number,
     @Body() updateProductSupermarketDto: UpdateProductSupermarketDto,
-  ) {
-    await this.productSupermarketService.updateProductSupermarket(
-      inventoryId,
-      updateProductSupermarketDto,
-    );
-    return updateProductSupermarketDto;
+  ): Promise<{ newPrice: number }> {
+    const updatedProductSupermarket =
+      await this.productSupermarketService.updateProductSupermarket(
+        supermarketId,
+        productId,
+        updateProductSupermarketDto,
+      );
+    return { newPrice: updatedProductSupermarket.price };
   }
 
   @Get()
