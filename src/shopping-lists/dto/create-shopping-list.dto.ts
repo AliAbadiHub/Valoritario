@@ -22,7 +22,4 @@ export class CreateShoppingListDto {
   @ValidateNested({ each: true })
   @Type(() => ProductItemDto)
   readonly items: ProductItemDto[];
-
-  @IsNotEmpty()
-  readonly createdAt: Date;
 }

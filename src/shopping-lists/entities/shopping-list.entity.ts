@@ -7,6 +7,7 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  CreateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'shopping_lists' })
@@ -14,10 +15,10 @@ export class ShoppingList {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
+  @CreateDateColumn({ nullable: false })
   createdAt: Date;
 
-  @Column({ nullable: true })
+  @CreateDateColumn({ nullable: true })
   updatedAt: Date;
 
   @Column('simple-json', { nullable: false })

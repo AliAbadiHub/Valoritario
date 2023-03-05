@@ -12,7 +12,7 @@ export class ShoppingListService {
   ) {}
 
   async create(dto: CreateShoppingListDto) {
-    const { items, createdAt } = dto;
+    const { items } = dto;
 
     const shoppingList = [];
 
@@ -25,7 +25,7 @@ export class ShoppingListService {
       const shoppingListItem = {
         product: productSupermarkets[0].product.productName,
         supermarket: productSupermarkets[0].supermarket.supermarketName,
-        price: productSupermarkets[0].price,
+        pricePerProduct: productSupermarkets[0].price,
         quantity: item.quantity,
         total: productSupermarkets[0].price * item.quantity,
       };
@@ -33,6 +33,11 @@ export class ShoppingListService {
       shoppingList.push(shoppingListItem);
     }
 
-    return { createdAt, shoppingList };
+    const totalPrice = shoppingList.reduce((acc, curr) => acc + curr.total, 0);
+
+    return {
+      totalPrice,
+      shoppingList,
+    };
   }
 }
