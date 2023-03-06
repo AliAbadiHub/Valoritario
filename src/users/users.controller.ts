@@ -29,32 +29,32 @@ export class UsersController {
     return this.usersService.createUser(createUserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get()
   getAllUsers(@Query('limit') limit: number, @Query('offset') offset: number) {
     return this.usersService.findAll(limit, offset);
   }
-  @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  // @UseGuards(JwtAuthGuard)
+  @Get(':userId')
+  findOne(@Param('userId') userId: string) {
+    return this.usersService.findOne(+userId);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Patch(':id')
+  // @UseGuards(JwtAuthGuard)
+  @Patch(':userId')
   @UsePipes(ValidationPipe)
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('userId', ParseIntPipe) userId: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    await this.usersService.updateUser(id, updateUserDto);
+    await this.usersService.updateUser(userId, updateUserDto);
     return updateUserDto;
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
+  // @UseGuards(JwtAuthGuard)
+  @Delete(':userId')
   @UsePipes(ValidationPipe)
-  async delete(@Param('id', ParseIntPipe) id: number) {
-    await this.usersService.deleteUser(id);
+  async delete(@Param('userId', ParseIntPipe) userId: number) {
+    await this.usersService.deleteUser(userId);
   }
 }

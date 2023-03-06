@@ -16,47 +16,46 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RoleMiddleware } from 'src/middlewares/role.middleware';
 
+// @UseGuards(JwtAuthGuard)
 @ApiTags('profiles')
 @Controller('profiles')
 export class ProfilesController {
   constructor(private profilesService: ProfilesService) {}
 
-  @UseGuards(JwtAuthGuard)
-  @Post(':id')
+  @Post(':userId')
   @UsePipes(ValidationPipe)
   createProfile(
     @Body() createProfileDto: CreateProfileDto,
-    @Param('id', ParseIntPipe) id: number,
+    @Param('userId', ParseIntPipe) userId: number,
   ) {
-    return this.profilesService.createProfile(id, createProfileDto);
+    return this.profilesService.createProfile(userId, createProfileDto);
   }
-  @UseGuards(JwtAuthGuard)
+
   @Get()
   getAllProfiles() {
     return this.profilesService.findAll();
   }
-  @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.profilesService.findOne(+id);
+
+  @Get(':profileId')
+  findOne(@Param('profileId') profileId: string) {
+    return this.profilesService.findOne(+profileId);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Patch(':id')
+  @Patch(':profileId')
   @UsePipes(ValidationPipe)
   async updateProfile(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('profileId', ParseIntPipe) profileId: number,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
-    await this.profilesService.updateProfile(id, updateProfileDto);
+    await this.profilesService.updateProfile(profileId, updateProfileDto);
     return updateProfileDto;
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
+  @Delete(':profileId')
   @UsePipes(ValidationPipe)
-  async delete(@Param('id', ParseIntPipe) id: number) {
-    await this.profilesService.deleteProfile(id);
+  async delete(@Param('profileId', ParseIntPipe) profileId: number) {
+    await this.profilesService.deleteProfile(profileId);
   }
 }

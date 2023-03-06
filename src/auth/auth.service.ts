@@ -31,7 +31,7 @@ export class AuthService {
     );
     await this.cacheManager.set(
       `val_generated:${refreshToken}`,
-      user.id,
+      user.userId,
       3600, // set the TTL of the cache to 1 hour (3600 seconds)
     );
     return { accessToken, refreshToken };
@@ -46,7 +46,7 @@ export class AuthService {
     if (!user) {
       return undefined;
     }
-    const accessToken = this.jwtService.sign({ userId: user.id });
+    const accessToken = this.jwtService.sign({ userId: user.userId });
     return accessToken;
   }
 
@@ -61,12 +61,12 @@ export class AuthService {
     const refreshObject = new RefreshToken({
       id: Math.random().toString(36).substring(2, 15),
       ...values,
-      userId: user.id,
+      userId: user.userId,
     });
     const refreshToken = refreshObject.sign();
     return {
       refreshToken,
-      accessToken: this.jwtService.sign({ userId: user.id }),
+      accessToken: this.jwtService.sign({ userId: user.userId }),
     };
   }
 }

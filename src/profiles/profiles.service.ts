@@ -12,13 +12,20 @@ export class ProfilesService {
     @InjectRepository(Profile) private profileRepository: Repository<Profile>,
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
-  async createProfile(id: number, createProfileDto: CreateProfileDto) {
-    const user = await this.userRepository.findOne({ where: { id } });
+  async createProfile(userId: number, createProfileDto: CreateProfileDto) {
+    const user = await this.userRepository.findOneBy({ userId });
     if (!user)
       throw new HttpException(
         'User not found, cannot create profile',
         HttpStatus.BAD_REQUEST,
       );
+    const profileExists = await this.profileRepository.findOneBy({ user });
+    if (profileExists) {
+      throw new HttpException(
+        'Profile already exists for the given user',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const newProfile = this.profileRepository.create({
       ...createProfileDto,
       createdAt: new Date(),
@@ -32,18 +39,18 @@ export class ProfilesService {
     return this.profileRepository.find();
   }
 
-  async findOne(id: number): Promise<Profile> {
-    return this.profileRepository.findOneBy({ id });
+  async findOne(profileId: number): Promise<Profile> {
+    return this.profileRepository.findOneBy({ profileId });
   }
 
-  updateProfile(id: number, updateProfileDetails: UpdateProfileDto) {
+  updateProfile(profileId: number, updateProfileDetails: UpdateProfileDto) {
     return this.profileRepository.update(
-      { id },
+      { profileId },
       { ...updateProfileDetails, updatedAt: new Date() },
     );
   }
 
-  deleteProfile(id: number) {
-    return this.profileRepository.delete({ id });
+  deleteProfile(profileId: number) {
+    return this.profileRepository.delete({ profileId });
   }
 }

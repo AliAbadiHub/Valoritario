@@ -10,10 +10,7 @@ import {
 @Entity({ name: 'users profiles' })
 export class Profile {
   @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  userId: number;
+  profileId: number;
 
   @Column({ nullable: false })
   firstName: string;

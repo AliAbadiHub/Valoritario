@@ -30,26 +30,26 @@ export class UsersService {
     });
   }
 
-  async findOne(id: number): Promise<User | undefined> {
-    const user = await this.userRepository.findOne({ where: { id } });
+  async findOne(userId: number): Promise<User | undefined> {
+    const user = await this.userRepository.findOne({ where: { userId } });
     return user || undefined;
   }
 
-  async updateUser(id: number, updateUserDetails: UpdateUserDto) {
+  async updateUser(userId: number, updateUserDetails: UpdateUserDto) {
     if (updateUserDetails.password) {
       updateUserDetails.password = await encodePassword(
         updateUserDetails.password,
       );
     }
     await this.userRepository.update(
-      { id },
+      { userId },
       { ...updateUserDetails, updatedAt: new Date() },
     );
-    return await this.userRepository.findOneBy({ id });
+    return await this.userRepository.findOneBy({ userId });
   }
 
-  deleteUser(id: number) {
-    return this.userRepository.delete({ id });
+  deleteUser(userId: number) {
+    return this.userRepository.delete({ userId });
   }
 
   async findUserByUsername(username: string): Promise<User | undefined> {
