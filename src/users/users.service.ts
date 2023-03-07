@@ -31,7 +31,10 @@ export class UsersService {
   }
 
   async findOne(userId: number): Promise<User | undefined> {
-    const user = await this.userRepository.findOne({ where: { userId } });
+    const user = await this.userRepository.findOne({
+      where: { userId },
+      relations: ['profile'],
+    });
     return user || undefined;
   }
 

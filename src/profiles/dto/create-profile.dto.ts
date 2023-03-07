@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDefined, IsNotEmpty } from 'class-validator';
+import { IsString, IsDefined, IsISO8601 } from 'class-validator';
+
+
 export class CreateProfileDto {
   @IsString()
   @ApiProperty()
@@ -18,11 +20,7 @@ export class CreateProfileDto {
   @ApiProperty()
   address: string;
 
-  @IsString()
-  @ApiProperty()
+  @IsISO8601()
+  @ApiProperty({ example: '1990-01-01' })
   dateOfBirth: string;
-
-  @IsNotEmpty()
-  @ApiProperty()
-  age: number;
 }

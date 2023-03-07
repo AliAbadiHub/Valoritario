@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
         "nestjs"
-    ]
+    ],
+    "dotenv.enableAutocloaking": false
 }

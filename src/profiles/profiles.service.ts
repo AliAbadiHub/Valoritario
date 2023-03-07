@@ -6,6 +6,19 @@ import { CreateProfileDto } from './dto/create-Profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
 
+function calculateAge(birthDateString: string): number {
+  const birthDate = new Date(birthDateString);
+  const today = new Date();
+  const age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    return age - 1;
+  }
+  return age;
+}
 @Injectable()
 export class ProfilesService {
   constructor(
@@ -28,6 +41,7 @@ export class ProfilesService {
     }
     const newProfile = this.profileRepository.create({
       ...createProfileDto,
+      age: calculateAge(createProfileDto.dateOfBirth),
       createdAt: new Date(),
     });
     const savedProfile = await this.profileRepository.save(newProfile);
@@ -43,11 +57,20 @@ export class ProfilesService {
     return this.profileRepository.findOneBy({ profileId });
   }
 
-  updateProfile(profileId: number, updateProfileDetails: UpdateProfileDto) {
-    return this.profileRepository.update(
-      { profileId },
-      { ...updateProfileDetails, updatedAt: new Date() },
-    );
+  async updateProfile(
+    profileId: number,
+    updateProfileDetails: UpdateProfileDto,
+  ): Promise<Profile> {
+    const profile = await this.profileRepository.findOneBy({ profileId });
+    if (!profile) {
+      throw new HttpException(
+        'Profile not found, cannot update profile',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    this.profileRepository.merge(profile, updateProfileDetails);
+    await this.profileRepository.save(profile);
+    return Promise.resolve(profile);
   }
 
   deleteProfile(profileId: number) {

@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity({ name: 'users profiles' })
+@Entity({ name: 'profiles' })
 export class Profile {
   @PrimaryGeneratedColumn()
   profileId: number;
