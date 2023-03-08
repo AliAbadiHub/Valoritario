@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateProductSupermarketDto } from './dto/create-product_supermarket.dto';
 import { UpdateProductSupermarketDto } from './dto/update-product_supermarket.dto';
 import { ProductSupermarket } from './entities/product_supermarket.entity';
@@ -66,21 +66,27 @@ export class ProductSupermarketsService {
       productId: productSupermarket.product.productId,
       productName: productSupermarket.product.productName,
       price: productSupermarket.price,
+      city: supermarket.city,
     }));
     return { supermarketName: supermarket.supermarketName, products };
   }
 
-  async getPricesByProduct(productId: number): Promise<any[]> {
+  async getPricesByProduct(
+    productId: number,
+    cityName: string,
+  ): Promise<any[]> {
     return this.productSupermarketRepository
       .createQueryBuilder('productSupermarket')
       .leftJoinAndSelect('productSupermarket.supermarket', 'supermarket')
       .leftJoinAndSelect('productSupermarket.product', 'product')
       .where('productSupermarket.productId = :productId', { productId })
+      .andWhere('supermarket.city = :cityName', { cityName })
       .orderBy('productSupermarket.price', 'ASC')
       .select([
         'productSupermarket.price as price',
         'product.productName as productName',
         'supermarket.supermarketName as supermarketName',
+        'supermarket.city as city',
       ])
       .getRawMany();
   }
@@ -115,6 +121,4 @@ export class ProductSupermarketsService {
   findAll() {
     return this.productSupermarketRepository.find();
   }
-
-
 }

@@ -16,7 +16,7 @@ export class Supermarket {
   @Column({ nullable: false, unique: true })
   supermarketName: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: 'Lecheria' })
   city: string;
 
   @Column({ nullable: false })

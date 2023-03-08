@@ -27,7 +27,7 @@ dotenv.config();
     ProductsModule,
     SupermarketsModule,
     ProductSupermarketsModule,
-    TypeOrmModule.forRoot(dataSourceOptions),
+    TypeOrmModule.forRoot({ ...dataSourceOptions, synchronize: true }),
     AuthModule,
     ShoppingListsModule,
   ],

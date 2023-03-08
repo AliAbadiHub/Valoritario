@@ -15,39 +15,48 @@ export class ShoppingListService {
     private readonly shoppingListRepository: Repository<ShoppingList>,
   ) {}
 
-  async create(dto: CreateShoppingListDto) {
-    const { items } = dto;
-
-    const shoppingList = [];
-
-    for (const item of items) {
-      const lowestPriceProductSupermarkets =
-        await this.productSupermarketRepository
-          .createQueryBuilder('ps')
-          .where('ps.productId = :productId', { productId: item.productId })
-          .orderBy('ps.price', 'ASC')
-          .leftJoinAndSelect('ps.product', 'product')
-          .leftJoinAndSelect('ps.supermarket', 'supermarket')
-          .getMany();
-
-      const shoppingListItem = {
-        product: lowestPriceProductSupermarkets[0].product.productName,
-        supermarket:
-          lowestPriceProductSupermarkets[0].supermarket.supermarketName,
-        pricePerProduct: lowestPriceProductSupermarkets[0].price,
-        quantity: item.quantity,
-        total: lowestPriceProductSupermarkets[0].price * item.quantity,
+  async create(dto: CreateShoppingListDto, cityName: string) {
+    try {
+      const { items } = dto;
+  
+      const shoppingList = [];
+  
+      for (const item of items) {
+        const lowestPriceProductSupermarkets =
+          await this.productSupermarketRepository
+            .createQueryBuilder('ps')
+            .where('ps.productId = :productId', { productId: item.productId })
+            .andWhere('supermarket.city = :cityName', { cityName: cityName })
+            .orderBy('ps.price', 'ASC')
+            .leftJoinAndSelect('ps.product', 'product')
+            .leftJoinAndSelect('ps.supermarket', 'supermarket')
+            .getMany();
+  
+        const shoppingListItem = {
+          product: lowestPriceProductSupermarkets[0].product.productName,
+          supermarket: lowestPriceProductSupermarkets[0].supermarket.supermarketName,
+          pricePerProduct: lowestPriceProductSupermarkets[0].price,
+          quantity: item.quantity,
+          total: (lowestPriceProductSupermarkets[0].price * item.quantity).toFixed(2),
+        };
+  
+        shoppingList.push(shoppingListItem);
+      }
+      
+  
+      const totalPrice = shoppingList.reduce(
+        (acc, curr) => acc + Number(curr.total),
+        0,
+      );  
+      return {
+        cityName,
+        totalPrice,
+        shoppingList,
       };
-
-      shoppingList.push(shoppingListItem);
+    } catch (error) {
+      console.error(error);
+      return { error: 'Error creating shopping list' };
     }
-
-    const totalPrice = shoppingList.reduce((acc, curr) => acc + curr.total, 0);
-
-    return {
-      totalPrice,
-      shoppingList,
-    };
   }
   async delete(id: number) {
     await this.shoppingListRepository.delete(id);

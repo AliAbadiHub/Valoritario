@@ -1,9 +1,10 @@
 import {
   IsArray,
-  IsNotEmpty,
   IsNumber,
   IsPositive,
   ValidateNested,
+  IsString,
+  IsNotEmpty,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -22,4 +23,8 @@ export class CreateShoppingListDto {
   @ValidateNested({ each: true })
   @Type(() => ProductItemDto)
   readonly items: ProductItemDto[];
+
+  @IsString()
+  @IsNotEmpty()
+  readonly city: string;
 }

@@ -47,9 +47,15 @@ export class ProductSupermarketController {
     );
   }
 
-  @Get('product/:productId')
-  async getPricesByProduct(@Param('productId') productId: number) {
-    return this.productSupermarketService.getPricesByProduct(productId);
+  @Get('product/:productId/:cityName')
+  async getPricesByProduct(
+    @Param('productId') productId: number,
+    @Param('cityName') cityName: string,
+  ) {
+    return this.productSupermarketService.getPricesByProduct(
+      productId,
+      cityName,
+    );
   }
 
   @Patch(':supermarketId/:productId')

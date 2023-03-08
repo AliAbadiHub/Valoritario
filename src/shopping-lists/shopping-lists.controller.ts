@@ -16,12 +16,20 @@ export class ShoppingListsController {
   constructor(private readonly shoppingListService: ShoppingListService) {}
 
   @Post()
-  async create(@Body() createShoppingListDto: CreateShoppingListDto) {
+  async create(
+    @Body() createShoppingListDto: CreateShoppingListDto,
+    @Body('cityName') cityName: string
+  ) {
     try {
       const shoppingList = await this.shoppingListService.create(
         createShoppingListDto,
+        cityName
       );
-      return { shoppingList };
+      return {
+        cityName: shoppingList.cityName, // added this line to include cityName in the response
+        totalPrice: shoppingList.totalPrice,
+        shoppingList: shoppingList.shoppingList,
+      };
     } catch (error) {
       return { error };
     }
