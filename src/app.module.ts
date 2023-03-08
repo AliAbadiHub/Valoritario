@@ -17,6 +17,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ShoppingListsModule } from './shopping-lists/shopping-lists.module';
 import * as dotenv from 'dotenv';
 import { ShoppingList } from './shopping-lists/entities/shopping-list.entity';
+import { dataSourceOptions } from 'db/data-source';
 dotenv.config();
 @Module({
   imports: [
@@ -26,23 +27,7 @@ dotenv.config();
     ProductsModule,
     SupermarketsModule,
     ProductSupermarketsModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: parseInt(process.env.DATABASE_PORT, 10),
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      entities: [
-        User,
-        Profile,
-        Product,
-        Supermarket,
-        ProductSupermarket,
-        ShoppingList,
-      ],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     AuthModule,
     ShoppingListsModule,
   ],

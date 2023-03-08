@@ -17,6 +17,9 @@ export class Supermarket {
   supermarketName: string;
 
   @Column({ nullable: false })
+  city: string;
+
+  @Column({ nullable: false })
   createdAt: Date;
 
   @Column({ nullable: true })
