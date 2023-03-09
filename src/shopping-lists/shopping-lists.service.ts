@@ -1,10 +1,11 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateShoppingListDto } from './dto/create-shopping-list.dto';
 import { ProductSupermarket } from '../product_supermarkets/entities/product_supermarket.entity';
 import { ShoppingList } from './entities/shopping-list.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ShoppingListService {
@@ -13,10 +14,18 @@ export class ShoppingListService {
     private readonly productSupermarketRepository: Repository<ProductSupermarket>,
     @InjectRepository(ShoppingList)
     private readonly shoppingListRepository: Repository<ShoppingList>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+
   ) {}
 
-  async create(dto: CreateShoppingListDto, cityName: string) {
+  async create(dto: CreateShoppingListDto, cityName: string, username: string) {
     try {
+      const user = await this.userRepository.findOneBy({ username });
+      if (!user) {
+        throw new NotFoundException('Username is not found');
+      }
+      
       const { items } = dto;
   
       const shoppingList = [];
@@ -49,6 +58,7 @@ export class ShoppingListService {
         0,
       );  
       return {
+        username,
         cityName,
         totalPrice: totalPrice.toFixed(2),
         shoppingList,

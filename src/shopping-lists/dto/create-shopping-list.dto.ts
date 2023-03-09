@@ -27,4 +27,8 @@ export class CreateShoppingListDto {
   @IsString()
   @IsNotEmpty()
   readonly city: string;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly username: string;
 }

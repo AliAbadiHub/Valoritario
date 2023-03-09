@@ -18,17 +18,20 @@ export class ShoppingListsController {
   @Post()
   async create(
     @Body() createShoppingListDto: CreateShoppingListDto,
-    @Body('cityName') cityName: string
+    @Body('cityName') cityName: string,
+    @Body('username') username: string,
   ) {
     try {
       const shoppingList = await this.shoppingListService.create(
         createShoppingListDto,
-        cityName
+        cityName,
+        username,
       );
       return {
         cityName: shoppingList.cityName, // added this line to include cityName in the response
         totalPrice: shoppingList.totalPrice,
         shoppingList: shoppingList.shoppingList,
+        username: shoppingList.username,
       };
     } catch (error) {
       return { error };

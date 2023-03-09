@@ -24,6 +24,9 @@ export class ShoppingList {
   @Column('simple-json', { nullable: false })
   products: { productId: number; quantity: number }[];
 
+  @Column({ nullable: false })
+  username: string;
+
   @ManyToOne(() => User, (user) => user.shoppingList)
   user: User;
 
