@@ -28,10 +28,10 @@ export class ShoppingListsController {
         username,
       );
       return {
+        username: shoppingList.username,
         cityName: shoppingList.cityName, // added this line to include cityName in the response
         totalPrice: shoppingList.totalPrice,
         shoppingList: shoppingList.shoppingList,
-        username: shoppingList.username,
       };
     } catch (error) {
       return { error };

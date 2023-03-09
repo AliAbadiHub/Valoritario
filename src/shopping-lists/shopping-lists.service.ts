@@ -47,6 +47,7 @@ export class ShoppingListService {
           pricePerProduct: lowestPriceProductSupermarkets[0].price,
           quantity: item.quantity,
           total: (lowestPriceProductSupermarkets[0].price * item.quantity).toFixed(2),
+          createdAt: lowestPriceProductSupermarkets[0].createdAt,
         };
   
         shoppingList.push(shoppingListItem);
