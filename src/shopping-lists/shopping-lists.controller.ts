@@ -37,10 +37,4 @@ export class ShoppingListsController {
       return { error };
     }
   }
-
-  @Delete(':id')
-  async delete(@Param('id') id: number) {
-    await this.shoppingListService.delete(id);
-    return { message: 'Shopping list with the ID ${id} has been deleted.' };
-  }
 }

@@ -6,6 +6,7 @@ import { CreateShoppingListDto } from './dto/create-shopping-list.dto';
 import { ProductSupermarket } from '../product_supermarkets/entities/product_supermarket.entity';
 import { ShoppingList } from './entities/shopping-list.entity';
 import { User } from 'src/users/entities/user.entity';
+import { ShoppingListArchive } from './entities/shopping-list-archive.entity';
 
 @Injectable()
 export class ShoppingListService {
@@ -16,6 +17,8 @@ export class ShoppingListService {
     private readonly shoppingListRepository: Repository<ShoppingList>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(ShoppingListArchive)
+    private shoppingListArchiveRepository: Repository<ShoppingListArchive>,
 
   ) {}
 
@@ -68,8 +71,5 @@ export class ShoppingListService {
       console.error(error);
       return { error: 'Error creating shopping list' };
     }
-  }
-  async delete(id: number) {
-    await this.shoppingListRepository.delete(id);
   }
 }

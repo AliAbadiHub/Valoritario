@@ -1,4 +1,5 @@
 import { Profile } from 'src/profiles/entities/profile.entity';
+import { ShoppingListArchive } from 'src/shopping-lists/entities/shopping-list-archive.entity';
 import { ShoppingList } from 'src/shopping-lists/entities/shopping-list.entity';
 import {
   Entity,
@@ -14,13 +15,13 @@ export class User {
   @PrimaryGeneratedColumn()
   userId: number;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: false })
   username: string;
 
-  @Column()
+  @Column({ nullable: false })
   password: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: false })
   email: string;
 
   @Column()
@@ -29,10 +30,7 @@ export class User {
   @Column({ nullable: true })
   updatedAt: Date;
 
-  @Column({ default: 'user' })
-  role: string;
-
-  @OneToOne(() => Profile, (profile) => profile.user)
+  @OneToOne(() => Profile, (profile) => profile.user, { eager: true })
   profile: Profile;
 
   @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.user, {
@@ -40,4 +38,14 @@ export class User {
   })
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   shoppingList: ShoppingList;
+
+  @OneToMany(
+    () => ShoppingListArchive,
+    (shoppingListArchive) => shoppingListArchive.user,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+  shoppingListArchive: ShoppingListArchive[];
 }

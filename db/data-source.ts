@@ -6,6 +6,7 @@ import { Profile } from 'src/profiles/entities/profile.entity';
 import { ShoppingList } from 'src/shopping-lists/entities/shopping-list.entity';
 import { Supermarket } from 'src/supermarkets/entities/supermarket.entity';
 import { User } from 'src/users/entities/user.entity';
+import { ShoppingListArchive } from 'src/shopping-lists/entities/shopping-list-archive.entity';
 dotenv.config();
 
 export const dataSourceOptions: DataSourceOptions = {
@@ -22,6 +23,7 @@ export const dataSourceOptions: DataSourceOptions = {
     Product,
     ShoppingList,
     Supermarket,
+    ShoppingListArchive,
   ],
   migrations: ['dist/db/migrations/*.js'],
 };

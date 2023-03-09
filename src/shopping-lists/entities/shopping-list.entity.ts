@@ -8,7 +8,9 @@ import {
   ManyToOne,
   OneToMany,
   CreateDateColumn,
+  OneToOne,
 } from 'typeorm';
+import { ShoppingListArchive } from './shopping-list-archive.entity';
 
 @Entity({ name: 'shopping_lists' })
 export class ShoppingList {
@@ -38,4 +40,10 @@ export class ShoppingList {
 
   @ManyToOne(() => Supermarket, (supermarket) => supermarket.shoppingLists)
   supermarket: Supermarket;
+
+  @OneToOne(
+    () => ShoppingListArchive,
+    (shoppingListArchive) => shoppingListArchive.shoppingList,
+  )
+  shoppingListArchive: ShoppingListArchive;
 }
