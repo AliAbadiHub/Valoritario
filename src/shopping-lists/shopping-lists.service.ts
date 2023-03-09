@@ -50,7 +50,7 @@ export class ShoppingListService {
       );  
       return {
         cityName,
-        totalPrice,
+        totalPrice: totalPrice.toFixed(2),
         shoppingList,
       };
     } catch (error) {
