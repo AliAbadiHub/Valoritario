@@ -18,9 +18,6 @@ export class ShoppingList {
   @CreateDateColumn({ nullable: false })
   createdAt: Date;
 
-  @CreateDateColumn({ nullable: true })
-  updatedAt: Date;
-
   @Column('simple-json', { nullable: false })
   products: { productId: number; quantity: number }[];
 
