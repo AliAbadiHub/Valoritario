@@ -1,5 +1,4 @@
 import { Profile } from 'src/profiles/entities/profile.entity';
-import { ShoppingListArchive } from 'src/shopping-lists/entities/shopping-list-archive.entity';
 import { ShoppingList } from 'src/shopping-lists/entities/shopping-list.entity';
 import {
   Entity,
@@ -38,14 +37,4 @@ export class User {
   })
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   shoppingList: ShoppingList;
-
-  @OneToMany(
-    () => ShoppingListArchive,
-    (shoppingListArchive) => shoppingListArchive.user,
-    {
-      onDelete: 'CASCADE',
-    },
-  )
-  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
-  shoppingListArchive: ShoppingListArchive[];
 }

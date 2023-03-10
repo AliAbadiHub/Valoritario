@@ -5,17 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ShoppingList } from './entities/shopping-list.entity';
 import { ProductSupermarket } from 'src/product_supermarkets/entities/product_supermarket.entity';
 import { User } from 'src/users/entities/user.entity';
-import { ShoppingListArchive } from './entities/shopping-list-archive.entity';
-
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      ShoppingList,
-      ProductSupermarket,
-      User,
-      ShoppingListArchive,
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([ShoppingList, ProductSupermarket, User])],
   controllers: [ShoppingListsController],
   providers: [ShoppingListService],
 })
