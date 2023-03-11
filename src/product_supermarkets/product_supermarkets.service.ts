@@ -67,6 +67,7 @@ export class ProductSupermarketsService {
       productName: productSupermarket.product.productName,
       price: productSupermarket.price,
       city: supermarket.city,
+      order: { productId: 'ASC' },
     }));
     return { supermarketName: supermarket.supermarketName, products };
   }

@@ -16,18 +16,18 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Query } from '@nestjs/common/decorators';
 
 @ApiTags('products')
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get()
   getAllProducts(
     @Query('limit') limit: number,
@@ -36,11 +36,13 @@ export class ProductsController {
     return this.productsService.findAll(limit, offset);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':productId')
   findOne(@Param('productId') productId: number) {
     return this.productsService.findOne(+productId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':productId')
   update(
     @Param('productId') productId: string,
@@ -49,6 +51,7 @@ export class ProductsController {
     return this.productsService.updateProduct(+productId, updateProductDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':productId')
   remove(@Param('productId') productId: string) {
     return this.productsService.deleteProduct(+productId);

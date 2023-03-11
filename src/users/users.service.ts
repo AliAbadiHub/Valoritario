@@ -27,6 +27,7 @@ export class UsersService {
       relations: ['profile'],
       skip: offset,
       take: limit,
+      order: { userId: 'ASC' },
     });
   }
 

@@ -29,18 +29,18 @@ export class UsersController {
     return this.usersService.createUser(createUserDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get()
   getAllUsers(@Query('limit') limit: number, @Query('offset') offset: number) {
     return this.usersService.findAll(limit, offset);
   }
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get(':userId')
   findOne(@Param('userId') userId: string) {
     return this.usersService.findOne(+userId);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch(':userId')
   @UsePipes(ValidationPipe)
   async update(
@@ -51,7 +51,7 @@ export class UsersController {
     return updateUserDto;
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':userId')
   @UsePipes(ValidationPipe)
   async delete(@Param('userId', ParseIntPipe) userId: number) {

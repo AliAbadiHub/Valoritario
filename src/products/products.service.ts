@@ -22,6 +22,7 @@ export class ProductsService {
     return this.productRepository.find({
       skip: offset,
       take: limit,
+      order: { productId: 'ASC' },
     });
   }
 

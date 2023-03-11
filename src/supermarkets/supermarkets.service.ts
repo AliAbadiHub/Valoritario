@@ -23,6 +23,7 @@ export class SupermarketsService {
     return this.supermarketRepository.find({
       skip: offset,
       take: limit,
+      order: { supermarketId: 'ASC' },
     });
   }
 
