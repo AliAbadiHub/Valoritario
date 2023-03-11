@@ -16,7 +16,6 @@ export class ShoppingListService {
     private readonly shoppingListRepository: Repository<ShoppingList>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-
   ) {}
 
   async create(dto: CreateShoppingListDto, cityName: string, username: string) {
@@ -25,13 +24,13 @@ export class ShoppingListService {
       if (!user) {
         throw new NotFoundException('Username is not found');
       }
-      
-      const { items } = dto;
   
+      const { items } = dto;
       const shoppingList = [];
+      let lowestPriceProductSupermarkets;
   
       for (const item of items) {
-        const lowestPriceProductSupermarkets =
+        lowestPriceProductSupermarkets =
           await this.productSupermarketRepository
             .createQueryBuilder('ps')
             .where('ps.productId = :productId', { productId: item.productId })
@@ -52,12 +51,20 @@ export class ShoppingListService {
   
         shoppingList.push(shoppingListItem);
       }
-      
   
       const totalPrice = shoppingList.reduce(
         (acc, curr) => acc + Number(curr.total),
         0,
-      );  
+      );
+  
+      const shoppingListEntity = new ShoppingList();
+      shoppingListEntity.username = username;
+      shoppingListEntity.products = items;
+      shoppingListEntity.supermarket = lowestPriceProductSupermarkets[0].supermarket;
+      shoppingListEntity.items = lowestPriceProductSupermarkets;
+  
+      await this.shoppingListRepository.save(shoppingListEntity);
+  
       return {
         username,
         cityName,
