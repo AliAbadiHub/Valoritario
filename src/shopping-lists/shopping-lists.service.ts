@@ -62,7 +62,15 @@ export class ShoppingListService {
       shoppingListEntity.products = items;
       shoppingListEntity.supermarket = lowestPriceProductSupermarkets[0].supermarket;
       shoppingListEntity.items = lowestPriceProductSupermarkets;
-  
+/**
+ *? this section saves the data to the entity table
+ ** i am testing out the colors from Better Comments
+ *! Let us add more lines to try out more colors
+ *TODO this is kinda cool
+ * // but i wish it would work with the double slash
+ ** how about this
+ */
+
       await this.shoppingListRepository.save(shoppingListEntity);
   
       return {

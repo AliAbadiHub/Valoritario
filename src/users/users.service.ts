@@ -39,21 +39,65 @@ export class UsersService {
     return user || undefined;
   }
 
-  async updateUser(userId: number, updateUserDetails: UpdateUserDto) {
-    if (updateUserDetails.password) {
-      updateUserDetails.password = await encodePassword(
-        updateUserDetails.password,
+  async updateUser(
+    userId: number,
+    updateUserDetails: UpdateUserDto,
+  ): Promise<User> {
+    try {
+      const existingUser = await this.userRepository.findOneBy({ userId });
+      if (!existingUser) {
+        throw new Error(`User with ID ${userId} not found`);
+      }
+      if (
+        updateUserDetails.username &&
+        updateUserDetails.username !== existingUser.username
+      ) {
+        throw new Error('Cannot update username');
+      }
+      if (
+        updateUserDetails.email &&
+        updateUserDetails.email !== existingUser.email
+      ) {
+        const existingUserByEmail = await this.userRepository.findOneBy({
+          email: updateUserDetails.email,
+        });
+        if (existingUserByEmail) {
+          throw new Error(
+            `User with email ${updateUserDetails.email} already exists`,
+          );
+        }
+      }
+      if (updateUserDetails.password) {
+        updateUserDetails.password = await encodePassword(
+          updateUserDetails.password,
+        );
+      }
+      await this.userRepository.update(
+        { userId },
+        { ...updateUserDetails, updatedAt: new Date() },
+      );
+      const updatedUser = await this.userRepository.findOneBy({ userId });
+      if (!updatedUser) {
+        throw new Error('Failed to update user');
+      }
+      return updatedUser;
+    } catch (error) {
+      throw new Error(
+        `Failed to update user with ID ${userId}: ${error.message}`,
       );
     }
-    await this.userRepository.update(
-      { userId },
-      { ...updateUserDetails, updatedAt: new Date() },
-    );
-    return await this.userRepository.findOneBy({ userId });
   }
 
-  deleteUser(userId: number) {
-    return this.userRepository.delete({ userId });
+  async deleteUser(userId: number): Promise<void> {
+    try {
+      const result = await this.userRepository.delete({ userId });
+      if (result.affected === 0) {
+        throw new Error(`No user found with ID ${userId}`);
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to delete user with ID ${userId}`);
+    }
   }
 
   async findUserByUsername(username: string): Promise<User | undefined> {
