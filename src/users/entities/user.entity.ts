@@ -14,9 +14,6 @@ export class User {
   @PrimaryGeneratedColumn()
   userId: number;
 
-  @Column({ unique: true, nullable: false })
-  username: string;
-
   @Column({ nullable: false })
   password: string;
 

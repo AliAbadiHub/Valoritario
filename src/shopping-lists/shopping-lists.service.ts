@@ -18,11 +18,11 @@ export class ShoppingListService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(dto: CreateShoppingListDto, cityName: string, username: string) {
+  async create(dto: CreateShoppingListDto, cityName: string, email: string) {
     try {
-      const user = await this.userRepository.findOneBy({ username });
+      const user = await this.userRepository.findOneBy({ email });
       if (!user) {
-        throw new NotFoundException('Username is not found');
+        throw new NotFoundException('Email is not found');
       }
   
       const { items } = dto;
@@ -58,7 +58,7 @@ export class ShoppingListService {
       );
   
       const shoppingListEntity = new ShoppingList();
-      shoppingListEntity.username = username;
+      shoppingListEntity.email = email;
       shoppingListEntity.products = items;
       shoppingListEntity.supermarket = lowestPriceProductSupermarkets[0].supermarket;
       shoppingListEntity.items = lowestPriceProductSupermarkets;
@@ -74,7 +74,7 @@ export class ShoppingListService {
       await this.shoppingListRepository.save(shoppingListEntity);
   
       return {
-        username,
+        email,
         cityName,
         totalPrice: totalPrice.toFixed(2),
         shoppingList,

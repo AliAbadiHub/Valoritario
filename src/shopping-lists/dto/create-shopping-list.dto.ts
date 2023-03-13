@@ -5,6 +5,7 @@ import {
   ValidateNested,
   IsString,
   IsNotEmpty,
+  IsEmail,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -28,7 +29,7 @@ export class CreateShoppingListDto {
   @IsNotEmpty()
   readonly city: string;
 
-  @IsString()
+  @IsEmail()
   @IsNotEmpty()
-  readonly username: string;
+  readonly email: string;
 }

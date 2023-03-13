@@ -49,10 +49,10 @@ export class UsersService {
         throw new Error(`User with ID ${userId} not found`);
       }
       if (
-        updateUserDetails.username &&
-        updateUserDetails.username !== existingUser.username
+        updateUserDetails.email &&
+        updateUserDetails.email !== existingUser.email
       ) {
-        throw new Error('Cannot update username');
+        throw new Error('Cannot update email');
       }
       if (
         updateUserDetails.email &&
@@ -100,8 +100,8 @@ export class UsersService {
     }
   }
 
-  async findUserByUsername(username: string): Promise<User | undefined> {
-    const user = await this.userRepository.findOne({ where: { username } });
+  async findUserByEmail(email: string): Promise<User | undefined> {
+    const user = await this.userRepository.findOne({ where: { email } });
     return user || undefined;
   }
 }

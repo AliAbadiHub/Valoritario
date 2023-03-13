@@ -14,11 +14,11 @@ export class AuthService {
   ) {}
 
   async login(
-    username: string,
+    email: string,
     password: string,
     values: { userAgent: string; ipAddress: string },
   ): Promise<{ accessToken: string; refreshToken: string } | undefined> {
-    const user = await this.usersService.findUserByUsername(username);
+    const user = await this.usersService.findUserByEmail(email);
     if (!user) {
       return undefined;
     }

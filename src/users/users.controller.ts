@@ -34,10 +34,21 @@ export class UsersController {
   getAllUsers(@Query('limit') limit: number, @Query('offset') offset: number) {
     return this.usersService.findAll(limit, offset);
   }
+
   @UseGuards(JwtAuthGuard)
   @Get(':userId')
   findOne(@Param('userId') userId: string) {
     return this.usersService.findOne(+userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('search/:email')
+  async getUserByEmail(@Param('email') email: string) {
+    const user = await this.usersService.findUserByEmail(email);
+    if (!user) {
+      return { message: `No user found with email ${email}` };
+    }
+    return user;
   }
 
   @UseGuards(JwtAuthGuard)

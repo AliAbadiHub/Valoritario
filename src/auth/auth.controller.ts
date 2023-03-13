@@ -36,7 +36,7 @@ export class AuthController {
   async login(@Req() request, @Ip() ip: string, @Body() body: LoginDto) {
     try {
       const { accessToken, refreshToken } = await this.authService.login(
-        body.username,
+        body.email,
         body.password,
         {
           ipAddress: ip,

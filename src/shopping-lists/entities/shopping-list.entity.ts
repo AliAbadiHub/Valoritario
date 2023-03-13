@@ -22,7 +22,7 @@ export class ShoppingList {
   products: { productId: number; quantity: number }[];
 
   @Column({ nullable: false })
-  username: string;
+  email: string;
 
   @ManyToOne(() => User, (user) => user.shoppingList)
   user: User;

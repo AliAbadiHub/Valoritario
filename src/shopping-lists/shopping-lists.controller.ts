@@ -12,16 +12,16 @@ export class ShoppingListsController {
   async create(
     @Body() createShoppingListDto: CreateShoppingListDto,
     @Body('cityName') cityName: string,
-    @Body('username') username: string,
+    @Body('email') email: string,
   ) {
     try {
       const shoppingList = await this.shoppingListService.create(
         createShoppingListDto,
         cityName,
-        username,
+        email,
       );
       return {
-        username: shoppingList.username,
+        email: shoppingList.email,
         cityName: shoppingList.cityName, // added this line to include cityName in the response
         totalPrice: shoppingList.totalPrice,
         shoppingList: shoppingList.shoppingList,
