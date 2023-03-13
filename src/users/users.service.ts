@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { encodePassword } from 'src/utils/bcrypt.utils';
 import { Repository } from 'typeorm';
@@ -11,19 +11,31 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
-  createUser(createUserDto: CreateUserDto) {
-    const password = encodePassword(createUserDto.password);
-    console.log(password);
+  async createUser(createUserDto: CreateUserDto) {
+    // Check if the email already exists in the database
+    const existingUser = await this.userRepository.findOneBy({
+      email: createUserDto.email,
+    });
+    if (existingUser) {
+      throw new ConflictException(
+        'The email account you used is already registered, either log in using that email and the correct password, or choose a different email account to sign up with',
+      );
+    }
+
+    // Encode the password and create the new user
+    const password = await encodePassword(createUserDto.password);
     const newUser = this.userRepository.create({
       ...createUserDto,
       password,
       createdAt: new Date(),
     });
+
     return this.userRepository.save(newUser);
   }
 
   findAll(limit: number, offset: number) {
     return this.userRepository.find({
+      select: ['userId', 'email', 'createdAt', 'updatedAt'],
       relations: ['profile'],
       skip: offset,
       take: limit,
@@ -41,49 +53,20 @@ export class UsersService {
 
   async updateUser(
     userId: number,
-    updateUserDetails: UpdateUserDto,
+    updateUserDto: UpdateUserDto,
   ): Promise<User> {
     try {
       const existingUser = await this.userRepository.findOneBy({ userId });
       if (!existingUser) {
         throw new Error(`User with ID ${userId} not found`);
       }
-      if (
-        updateUserDetails.email &&
-        updateUserDetails.email !== existingUser.email
-      ) {
-        throw new Error('Cannot update email');
-      }
-      if (
-        updateUserDetails.email &&
-        updateUserDetails.email !== existingUser.email
-      ) {
-        const existingUserByEmail = await this.userRepository.findOneBy({
-          email: updateUserDetails.email,
-        });
-        if (existingUserByEmail) {
-          throw new Error(
-            `User with email ${updateUserDetails.email} already exists`,
-          );
-        }
-      }
-      if (updateUserDetails.password) {
-        updateUserDetails.password = await encodePassword(
-          updateUserDetails.password,
-        );
-      }
-      await this.userRepository.update(
-        { userId },
-        { ...updateUserDetails, updatedAt: new Date() },
-      );
-      const updatedUser = await this.userRepository.findOneBy({ userId });
-      if (!updatedUser) {
-        throw new Error('Failed to update user');
-      }
+      existingUser.password = await encodePassword(updateUserDto.password);
+      existingUser.updatedAt = new Date();
+      const updatedUser = await this.userRepository.save(existingUser);
       return updatedUser;
     } catch (error) {
       throw new Error(
-        `Failed to update user with ID ${userId}: ${error.message}`,
+        `Failed to update password for user with ID ${userId}: ${error.message}`,
       );
     }
   }

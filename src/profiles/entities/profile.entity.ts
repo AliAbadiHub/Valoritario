@@ -18,6 +18,9 @@ export class Profile {
   @Column({ nullable: false })
   lastName: string;
 
+  @Column({ nullable: true })
+  displayName: string;
+
   @Column({ nullable: false })
   phoneNumber: string;
 

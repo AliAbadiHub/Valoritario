@@ -14,11 +14,11 @@ export class User {
   @PrimaryGeneratedColumn()
   userId: number;
 
-  @Column({ nullable: false })
-  password: string;
-
   @Column({ unique: true, nullable: false })
   email: string;
+
+  @Column({ nullable: false })
+  password: string;
 
   @Column()
   createdAt: Date;
