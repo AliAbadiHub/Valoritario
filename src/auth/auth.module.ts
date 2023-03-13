@@ -9,6 +9,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import * as redisStore from 'cache-manager-redis-store';
 import { JwtModule } from '@nestjs/jwt/dist';
 import * as dotenv from 'dotenv';
+import { GoogleStrategy } from './strategies/google.strategy';
 dotenv.config();
 
 @Module({
@@ -29,7 +30,7 @@ dotenv.config();
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, GoogleStrategy],
   exports: [JwtModule],
 })
 export class AuthModule {}
