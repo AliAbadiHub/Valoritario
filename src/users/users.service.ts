@@ -1,5 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Profile } from 'src/profiles/entities/profile.entity';
 import { encodePassword } from 'src/utils/bcrypt.utils';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -86,5 +87,18 @@ export class UsersService {
   async findUserByEmail(email: string): Promise<User | undefined> {
     const user = await this.userRepository.findOne({ where: { email } });
     return user || undefined;
+  }
+
+  async createUserFromGoogleProfile(profile: any): Promise<User> {
+    const user = new User();
+    user.email = profile.email;
+    user.password = ''; // set a dummy password
+    user.createdAt = new Date();
+    user.profile = new Profile(); // create a new Profile for the user
+    user.profile.firstName = profile.given_name;
+    user.profile.lastName = profile.family_name;
+    user.profile.pictureUrl = profile.picture;
+    await this.userRepository.save(user);
+    return user;
   }
 }

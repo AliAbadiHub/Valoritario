@@ -17,24 +17,37 @@ export class AuthService {
     email: string,
     password: string,
     values: { userAgent: string; ipAddress: string },
+    googleProfile?: any,
+    googleTokens?: { accessToken: string; refreshToken: string },
   ): Promise<{ accessToken: string; refreshToken: string } | undefined> {
-    const user = await this.usersService.findUserByEmail(email);
-    if (!user) {
-      return undefined;
+    let user: User;
+    if (googleProfile) {
+      user = await this.findOrCreateUserFromGoogleProfile(googleProfile);
+    } else {
+      user = await this.usersService.findUserByEmail(email);
+      if (!user) {
+        return undefined;
+      }
+      if (!(await compare(password, user.password))) {
+        return undefined;
+      }
     }
-    if (!(await compare(password, user.password))) {
-      return undefined;
-    }
-    const { accessToken, refreshToken } = await this.newRefreshAndAccessToken(
-      user,
-      values,
-    );
+    const { accessToken, refreshToken } =
+      googleTokens || (await this.newRefreshAndAccessToken(user, values));
     await this.cacheManager.set(
       `val_generated:${refreshToken}`,
       user.userId,
       3600, // set the TTL of the cache to 1 hour (3600 seconds)
     );
     return { accessToken, refreshToken };
+  }
+
+  async findOrCreateUserFromGoogleProfile(googleProfile: any): Promise<User> {
+    let user = await this.usersService.findUserByEmail(googleProfile.email);
+    if (!user) {
+      user = await this.usersService.createUserFromGoogleProfile(googleProfile);
+    }
+    return user;
   }
 
   async refresh(refreshToken: string): Promise<string | undefined> {
@@ -68,5 +81,21 @@ export class AuthService {
       refreshToken,
       accessToken: this.jwtService.sign({ userId: user.userId }),
     };
+  }
+  async loginWithGoogle(
+    googleProfile: any,
+    values: { userAgent: string; ipAddress: string },
+  ): Promise<{ accessToken: string; refreshToken: string } | undefined> {
+    const user = await this.findOrCreateUserFromGoogleProfile(googleProfile);
+    const { accessToken, refreshToken } = await this.newRefreshAndAccessToken(
+      user,
+      values,
+    );
+    await this.cacheManager.set(
+      `val_generated:${refreshToken}`,
+      user.userId,
+      3600, // set the TTL of the cache to 1 hour (3600 seconds)
+    );
+    return { accessToken, refreshToken };
   }
 }

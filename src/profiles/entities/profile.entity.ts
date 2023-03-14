@@ -42,4 +42,7 @@ export class Profile {
   @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
+
+  @Column({ nullable: true })
+  pictureUrl: string;
 }

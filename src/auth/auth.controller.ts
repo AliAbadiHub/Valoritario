@@ -8,9 +8,11 @@ import {
   Ip,
   Post,
   Req,
+  Res,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -63,14 +65,17 @@ export class AuthController {
   }
 
   @Get('google/login')
-  @UseGuards(GoogleAuthGuard)
-  handleLogin() {
-    return { msg: 'Google Authentication' };
-  }
-  // auth/google/redirect
+  @UseGuards(AuthGuard('google'))
+  async googleLogin() {}
+
   @Get('google/redirect')
-  @UseGuards(GoogleAuthGuard)
-  handleRedirect() {
-    return { msg: 'OK' };
+  @UseGuards(AuthGuard('google'))
+  googleCallback(@Req() req, @Res() res) {
+    console.log('req.user:', req.user); // add this line
+    const accessToken = req.user.accessToken;
+    const refreshToken = req.user.refreshToken;
+    res.redirect(
+      `/dashboard?accessToken=${accessToken}&refreshToken=${refreshToken}`,
+    );
   }
 }
