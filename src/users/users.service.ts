@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { encodePassword } from 'src/utils/bcrypt.utils';
 import { Repository } from 'typeorm';
@@ -11,7 +11,19 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
-  createUser(createUserDto: CreateUserDto) {
+
+  async createUser(createUserDto: CreateUserDto) {
+    // Check if user already exists with this email
+    const existingUser = await this.userRepository.findOne({
+      where: { email: createUserDto.email },
+    });
+    if (existingUser) {
+      throw new BadRequestException(
+        'The email you entered is already registered for Valoritario. If that was you, please sigm in from the account login page, otherwise, choose a different email address to create an account.',
+      );
+    }
+
+    // Create new user
     const password = encodePassword(createUserDto.password);
     console.log(password);
     const newUser = this.userRepository.create({
