@@ -2,7 +2,7 @@
   "name": "val_generated",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Ali <73250429+AliAbadiHub@users.noreply.github.com>",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -101,5 +101,7 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "main": "index.js",
+  "repository": "https://github.com/AliAbadiHub/val_generated.git"
 }
