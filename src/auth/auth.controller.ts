@@ -17,8 +17,6 @@ import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import RefreshTokenDto from './dto/refresh-token.dto';
-import { GoogleAuthGuard } from './guards/google-auth.guard';
-
 @Controller('auth')
 @ApiTags('Authentication')
 export class AuthController {
@@ -71,7 +69,6 @@ export class AuthController {
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
   googleCallback(@Req() req, @Res() res) {
-    console.log('req.user:', req.user); // add this line
     const accessToken = req.user.accessToken;
     const refreshToken = req.user.refreshToken;
     res.redirect(

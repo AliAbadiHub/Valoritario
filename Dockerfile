@@ -7,11 +7,13 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
+RUN yarn config set registry https://registry.yarnpkg.com/
+
 # Install any needed dependencies
-RUN npm install
+RUN yarn install
 
 # Expose port 3000
-EXPOSE 3000
+EXPOSE 3003
 
 # Define the command to run your application
-CMD [ "npm", "start" ]
+CMD [ "yarn", "start" ]

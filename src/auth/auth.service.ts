@@ -98,4 +98,16 @@ export class AuthService {
     );
     return { accessToken, refreshToken };
   }
+
+  private generateRandomString(length: number): string {
+    const possibleChars =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += possibleChars.charAt(
+        Math.floor(Math.random() * possibleChars.length),
+      );
+    }
+    return result;
+  }
 }

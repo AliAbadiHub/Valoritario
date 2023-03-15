@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -12,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ShoppingListsModule } from './shopping-lists/shopping-lists.module';
 import * as dotenv from 'dotenv';
 import { dataSourceOptions } from 'db/data-source';
+import { DisableCacheForOAuthMiddleware } from './auth/DisableCacheForOAuth.middleware';
 dotenv.config();
 @Module({
   imports: [
@@ -28,4 +29,8 @@ dotenv.config();
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(DisableCacheForOAuthMiddleware).forRoutes('*');
+  }
+}
