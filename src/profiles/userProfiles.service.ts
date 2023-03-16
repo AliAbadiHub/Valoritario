@@ -26,6 +26,7 @@ export class UserProfilesService {
     private userProfileRepository: Repository<UserProfile>,
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
+
   async createProfile(userId: number, createProfileDto: CreateProfileDto) {
     const user = await this.userRepository.findOneBy({ userId });
     if (!user)

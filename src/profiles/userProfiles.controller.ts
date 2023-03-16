@@ -11,7 +11,7 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { UserProfilesService } from './profiles.service';
+import { UserProfilesService } from './userProfiles.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';

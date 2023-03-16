@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { UserProfilesModule } from './profiles/profiles.module';
 import { ProductsModule } from './products/products.module';
 import { SupermarketsModule } from './supermarkets/supermarkets.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ShoppingListsModule } from './shopping-lists/shopping-lists.module';
 import * as dotenv from 'dotenv';
 import { dataSourceOptions } from 'db/data-source';
+import { UserProfilesModule } from './profiles/userProfiles.module';
 dotenv.config();
 @Module({
   imports: [
