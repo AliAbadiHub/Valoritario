@@ -61,7 +61,7 @@ export class AuthController {
   async logout(@Body() body: RefreshTokenDto) {
     return this.authService.logout(body.refreshToken);
   }
-
+  // auth/google/login
   @Get('google/login')
   @UseGuards(GoogleAuthGuard)
   handleLogin() {
@@ -71,6 +71,6 @@ export class AuthController {
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
   handleRedirect() {
-    return { msg: 'OK' };
+    return { msg: 'Redirect method' };
   }
 }
