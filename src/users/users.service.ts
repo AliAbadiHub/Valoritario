@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Profile } from 'passport-google-oauth20';
+import { UserProfile } from 'src/profiles/entities/userProfile.entity';
 import { encodePassword } from 'src/utils/bcrypt.utils';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -10,6 +12,8 @@ import { User } from './entities/user.entity';
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(UserProfile)
+    private userProfileRepository: Repository<UserProfile>,
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
@@ -115,5 +119,27 @@ export class UsersService {
   async findUserByEmail(email: string): Promise<User | undefined> {
     const user = await this.userRepository.findOne({ where: { email } });
     return user || undefined;
+  }
+
+  async findOrCreateGoogleUser(passportProfile: Profile): Promise<User> {
+    const email = passportProfile.emails[0].value;
+    let user = await this.findUserByEmail(email);
+
+    if (!user) {
+      user = new User();
+      user.email = email;
+      user.googleId = passportProfile.id;
+      await this.userRepository.save(user);
+
+      const userProfile = new UserProfile();
+      userProfile.firstName = passportProfile.name.givenName;
+      userProfile.lastName = passportProfile.name.familyName;
+      userProfile.user = user;
+      // Set other userProfile properties as needed or leave them empty
+      await this.userProfileRepository.save(userProfile);
+      user.userProfile = userProfile;
+    }
+
+    return user;
   }
 }

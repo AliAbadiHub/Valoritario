@@ -11,7 +11,7 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ProfilesService } from './profiles.service';
+import { UserProfilesService } from './profiles.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -20,8 +20,8 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 @UseGuards(JwtAuthGuard)
 @ApiTags('profiles')
 @Controller('profiles')
-export class ProfilesController {
-  constructor(private profilesService: ProfilesService) {}
+export class UserProfilesController {
+  constructor(private userProfilesService: UserProfilesService) {}
 
   @Post(':userId')
   @UsePipes(ValidationPipe)
@@ -29,17 +29,17 @@ export class ProfilesController {
     @Body() createProfileDto: CreateProfileDto,
     @Param('userId', ParseIntPipe) userId: number,
   ) {
-    return this.profilesService.createProfile(userId, createProfileDto);
+    return this.userProfilesService.createProfile(userId, createProfileDto);
   }
 
   @Get()
   getAllProfiles() {
-    return this.profilesService.findAll();
+    return this.userProfilesService.findAll();
   }
 
   @Get(':profileId')
   findOne(@Param('profileId') profileId: string) {
-    return this.profilesService.findOne(+profileId);
+    return this.userProfilesService.findOne(+profileId);
   }
 
   @Patch(':profileId')
@@ -48,13 +48,13 @@ export class ProfilesController {
     @Param('profileId', ParseIntPipe) profileId: number,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
-    await this.profilesService.updateProfile(profileId, updateProfileDto);
+    await this.userProfilesService.updateProfile(profileId, updateProfileDto);
     return updateProfileDto;
   }
 
   @Delete(':profileId')
   @UsePipes(ValidationPipe)
   async delete(@Param('profileId', ParseIntPipe) profileId: number) {
-    await this.profilesService.deleteProfile(profileId);
+    await this.userProfilesService.deleteProfile(profileId);
   }
 }

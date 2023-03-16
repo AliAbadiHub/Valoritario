@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProfilesController } from './profiles.controller';
-import { ProfilesService } from './profiles.service';
+import { UserProfileController } from './profiles.controller';
+import { UserProfileService } from './profiles.service';
 
-describe('ProfilesController', () => {
-  let controller: ProfilesController;
+describe('UserProfileController', () => {
+  let controller: UserProfileController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ProfilesController],
-      providers: [ProfilesService],
+      controllers: [UserProfileController],
+      providers: [UserProfileService],
     }).compile();
 
-    controller = module.get<ProfilesController>(ProfilesController);
+    controller = module.get<UserProfileController>(UserProfileController);
   });
 
   it('should be defined', () => {

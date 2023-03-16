@@ -2,7 +2,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import * as dotenv from 'dotenv';
 import { Product } from 'src/products/entities/product.entity';
 import { ProductSupermarket } from 'src/product_supermarkets/entities/product_supermarket.entity';
-import { Profile } from 'src/profiles/entities/profile.entity';
+import { UserProfile } from 'src/profiles/entities/userProfile.entity';
 import { ShoppingList } from 'src/shopping-lists/entities/shopping-list.entity';
 import { Supermarket } from 'src/supermarkets/entities/supermarket.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -17,7 +17,7 @@ export const dataSourceOptions: DataSourceOptions = {
   database: process.env.DATABASE_NAME,
   entities: [
     User,
-    Profile,
+    UserProfile,
     ProductSupermarket,
     Product,
     ShoppingList,

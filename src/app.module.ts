@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { ProfilesModule } from './profiles/profiles.module';
+import { UserProfilesModule } from './profiles/profiles.module';
 import { ProductsModule } from './products/products.module';
 import { SupermarketsModule } from './supermarkets/supermarkets.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -17,7 +17,7 @@ dotenv.config();
   imports: [
     ConfigModule.forRoot(),
     UsersModule,
-    ProfilesModule,
+    UserProfilesModule,
     ProductsModule,
     SupermarketsModule,
     ProductSupermarketsModule,

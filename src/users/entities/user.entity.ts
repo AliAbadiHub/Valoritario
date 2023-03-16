@@ -1,4 +1,4 @@
-import { Profile } from 'src/profiles/entities/profile.entity';
+import { UserProfile } from 'src/profiles/entities/userProfile.entity';
 import { ShoppingList } from 'src/shopping-lists/entities/shopping-list.entity';
 import {
   Entity,
@@ -20,14 +20,19 @@ export class User {
   @Column({ unique: true, nullable: false })
   email: string;
 
+  @Column({ nullable: true, unique: true })
+  googleId: string;
+
   @Column()
   createdAt: Date;
 
   @Column({ nullable: true })
   updatedAt: Date;
 
-  @OneToOne(() => Profile, (profile) => profile.user, { eager: true })
-  profile: Profile;
+  @OneToOne(() => UserProfile, (userProfile) => userProfile.user, {
+    eager: true,
+  })
+  userProfile: UserProfile;
 
   @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.user, {
     onDelete: 'CASCADE',
