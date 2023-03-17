@@ -36,6 +36,9 @@ export class UserProfile {
   @Column({ nullable: true })
   updatedAt: Date;
 
+  @Column({ nullable: true })
+  profilePictureUrl: string;
+
   @OneToOne(() => User, (user) => user.userProfile, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
