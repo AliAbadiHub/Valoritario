@@ -9,6 +9,11 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
+    "paths": {
+      "src/*": ["src/*"],
+      "db/*": ["db/*"]
+    },
+    "rootDir": "./",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
@@ -17,5 +22,8 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "include": ["src/**/*.ts", "db/data-source.ts", "db/migrations/1680041809332-AddMoreColumnsToUser.ts", "db/migrations/1680026074841-AddUserTable.ts"],
+  "exclude": ["node_modules"]
+
 }
