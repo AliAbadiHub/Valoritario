@@ -35,7 +35,16 @@ export class UsersService {
       password,
       createdAt: new Date(),
     });
-    return this.userRepository.save(newUser);
+    const savedUser = await this.userRepository.save(newUser);
+
+    const responseUser = {
+      id: savedUser.userId,
+      email: savedUser.email,
+      createdAt: savedUser.createdAt,
+      updatedAt: savedUser.updatedAt,
+    };
+
+    return responseUser;
   }
 
   findAll(limit: number, offset: number) {
