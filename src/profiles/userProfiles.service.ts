@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-import { CreateProfileDto } from './dto/create-Profile.dto';
+import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UserProfile } from './entities/userProfile.entity';
 
@@ -47,7 +47,13 @@ export class UserProfilesService {
       createdAt: new Date(),
     });
     const savedProfile = await this.userProfileRepository.save(newProfile);
-    user.userProfile = savedProfile;
+    // Ensure that savedProfile is a single UserProfile object
+    if (Array.isArray(savedProfile)) {
+      user.userProfile = savedProfile;
+    } else {
+      user.userProfile = savedProfile;
+    }
+
     return this.userRepository.save(user);
   }
 
